@@ -24,6 +24,12 @@ seaborn>=0.11.0
 # Progress Bar (Optional)
 tqdm>=4.62.0
 
+# Baselines
+xgboost>=1.7.0
+
+# Graph analysis
+networkx>=2.8.0
+
 # ===================================
 # GPU Support (Optional)
 # ===================================

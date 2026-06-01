@@ -3,7 +3,10 @@ Evaluation Metrics Module
 Implements AUC, Recall, Precision, F1-score, and other metrics.
 """
 import numpy as np
-from sklearn.metrics import roc_auc_score, recall_score, precision_score, f1_score, confusion_matrix
+from sklearn.metrics import (
+    roc_auc_score, recall_score, precision_score, f1_score,
+    confusion_matrix, average_precision_score
+)
 
 
 def calculate_metrics(y_true, y_pred, y_prob=None):
@@ -55,6 +58,26 @@ def calculate_metrics(y_true, y_pred, y_prob=None):
     # Confusion Matrix
     cm = confusion_matrix(y_true, y_pred)
     metrics['Confusion_Matrix'] = cm
+
+    # AUPRC (Area Under Precision-Recall Curve)
+    if y_prob is not None and not (np.isnan(y_prob).any() or np.isinf(y_prob).any()):
+        unique_labels = np.unique(y_true)
+        if len(unique_labels) >= 2:
+            try:
+                metrics['AUPRC'] = average_precision_score(y_true, y_prob)
+            except ValueError:
+                metrics['AUPRC'] = 0.0
+        else:
+            metrics['AUPRC'] = 0.0
+    else:
+        metrics['AUPRC'] = 0.0
+
+    # G-Mean = sqrt(Recall * Specificity)
+    tn = cm[0, 0] if cm.shape[0] > 1 else 0
+    fp = cm[0, 1] if cm.shape[0] > 1 and cm.shape[1] > 1 else 0
+    specificity = tn / (tn + fp) if (tn + fp) > 0 else 0.0
+    metrics['G-Mean'] = np.sqrt(metrics['Recall'] * specificity)
+    metrics['Specificity'] = specificity
 
     return metrics
 
