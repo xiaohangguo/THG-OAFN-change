@@ -70,9 +70,11 @@ class TP_THGN_GPU(nn.Module):
         h = self.feature_extractor(node_features)
         h = self.td_gru_gnn(adj, h, timestamps)
 
+        # XAttention first (before oversampling, so adj dimensions match)
+        h = self.xattention(adj, h, adj_per_type)
+
         lap_loss = torch.tensor(0.0, device=h.device)
         labels_processed = labels
-        graph_changed = False
 
         if training and labels is not None and self.oversample_ratio > 1.0:
             num_fraud = (labels == 1).sum().item()
@@ -80,13 +82,8 @@ class TP_THGN_GPU(nn.Module):
                 h_os, labels_os, _, lap_loss = self.tp_graphsmote(
                     h, labels, adj, self.oversample_ratio
                 )
-                if h_os.shape[0] != h.shape[0]:
-                    graph_changed = True
                 h = h_os
                 labels_processed = labels_os
-
-        if not graph_changed:
-            h = self.xattention(adj, h, adj_per_type)
 
         h = self.dropout(h)
         logits = self.classifier(h)
