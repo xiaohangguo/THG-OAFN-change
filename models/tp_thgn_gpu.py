@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .td_gru_gnn_gpu import TD_GRU_GNN_GPU
-from .tp_graphsmote import TPGraphSMOTE
+from .tp_graphsmote_gpu import TPGraphSMOTEGPU
 from .xattention_gpu import XMultiLayerAttentionGPU
 from .tri_explainer import TriExplainer
 
@@ -34,7 +34,7 @@ class TP_THGN_GPU(nn.Module):
             num_layers=2
         )
 
-        self.tp_graphsmote = TPGraphSMOTE(
+        self.tp_graphsmote = TPGraphSMOTEGPU(
             embedding_dim=hidden_dim,
             k_neighbors=5,
             beta=beta_laplacian
@@ -77,10 +77,8 @@ class TP_THGN_GPU(nn.Module):
         if training and labels is not None and self.oversample_ratio > 1.0:
             num_fraud = (labels == 1).sum().item()
             if num_fraud > 0:
-                # Use dense adj for SMOTE (small graph, affordable)
-                dense_adj = adj.to_dense() if adj.is_sparse else adj
-                h_os, labels_os, adj_os, lap_loss = self.tp_graphsmote(
-                    h, labels, dense_adj, self.oversample_ratio
+                h_os, labels_os, _, lap_loss = self.tp_graphsmote(
+                    h, labels, adj, self.oversample_ratio
                 )
                 if h_os.shape[0] != h.shape[0]:
                     graph_changed = True
