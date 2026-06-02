@@ -1,0 +1,369 @@
+[
+  {
+    "node_idx": 11245,
+    "predicted_label": 1,
+    "fraud_probability": 0.8488720655441284,
+    "true_label": 1,
+    "feature_attribution": [
+      {
+        "feature": "feat_1",
+        "importance": 0.0,
+        "value": -0.7029595375061035,
+        "gradient": 0.0
+      },
+      {
+        "feature": "feat_0",
+        "importance": 0.0,
+        "value": -0.23527953028678894,
+        "gradient": 0.0
+      },
+      {
+        "feature": "feat_2",
+        "importance": 0.0,
+        "value": 1.8181294202804565,
+        "gradient": 0.0
+      },
+      {
+        "feature": "feat_4",
+        "importance": 0.0,
+        "value": -0.1859343945980072,
+        "gradient": 0.0
+      },
+      {
+        "feature": "feat_3",
+        "importance": 0.0,
+        "value": -0.2756623923778534,
+        "gradient": 0.0
+      }
+    ],
+    "edge_attribution": [
+      {
+        "neighbor_idx": 33,
+        "relation_type": "USU (same star)",
+        "relation_id": 1
+      },
+      {
+        "neighbor_idx": 221,
+        "relation_type": "USU (same star)",
+        "relation_id": 1
+      },
+      {
+        "neighbor_idx": 310,
+        "relation_type": "USU (same star)",
+        "relation_id": 1
+      },
+      {
+        "neighbor_idx": 1946,
+        "relation_type": "UVU (same vote)",
+        "relation_id": 2
+      },
+      {
+        "neighbor_idx": 2452,
+        "relation_type": "UVU (same vote)",
+        "relation_id": 2
+      },
+      {
+        "neighbor_idx": 2919,
+        "relation_type": "UVU (same vote)",
+        "relation_id": 2
+      }
+    ],
+    "subgraph_attribution": {
+      "center_node": 11245,
+      "high_risk_neighbors": [
+        {
+          "node": 11245,
+          "fraud_prob": 0.8488720655441284,
+          "hop": 0
+        },
+        {
+          "node": 5078,
+          "fraud_prob": 0.8458448648452759,
+          "hop": 1
+        },
+        {
+          "node": 4910,
+          "fraud_prob": 0.8449406623840332,
+          "hop": 1
+        },
+        {
+          "node": 4896,
+          "fraud_prob": 0.8433113098144531,
+          "hop": 1
+        },
+        {
+          "node": 6980,
+          "fraud_prob": 0.8337998986244202,
+          "hop": 1
+        },
+        {
+          "node": 5981,
+          "fraud_prob": 0.7699361443519592,
+          "hop": 1
+        },
+        {
+          "node": 6243,
+          "fraud_prob": 0.588478684425354,
+          "hop": 1
+        },
+        {
+          "node": 6759,
+          "fraud_prob": 0.45142996311187744,
+          "hop": 1
+        }
+      ],
+      "total_explored": 52
+    },
+    "relation_weights": {
+      "layer1": [
+        0.3347342610359192,
+        0.33553051948547363,
+        0.3297352194786072
+      ],
+      "layer2": [
+        0.3369280993938446,
+        0.33666566014289856,
+        0.32640621066093445
+      ]
+    },
+    "case_type": "True Positive (Detected Fraud)"
+  },
+  {
+    "node_idx": 9561,
+    "predicted_label": 0,
+    "fraud_probability": 0.4558211863040924,
+    "true_label": 1,
+    "feature_attribution": [
+      {
+        "feature": "feat_19",
+        "importance": 1.0566253662109375,
+        "value": 1.633439064025879,
+        "gradient": 0.6468716263771057
+      },
+      {
+        "feature": "feat_11",
+        "importance": 0.37613803148269653,
+        "value": 0.9472601413726807,
+        "gradient": -0.3970799744129181
+      },
+      {
+        "feature": "feat_17",
+        "importance": 0.24590374529361725,
+        "value": 0.8769338130950928,
+        "gradient": -0.28041312098503113
+      },
+      {
+        "feature": "feat_18",
+        "importance": 0.1356828808784485,
+        "value": 0.7306603789329529,
+        "gradient": -0.1856989711523056
+      },
+      {
+        "feature": "feat_14",
+        "importance": 0.12646031379699707,
+        "value": -0.5876326560974121,
+        "gradient": -0.21520301699638367
+      }
+    ],
+    "edge_attribution": [
+      {
+        "neighbor_idx": 9155,
+        "relation_type": "UPU (same product)",
+        "relation_id": 0
+      },
+      {
+        "neighbor_idx": 9559,
+        "relation_type": "UPU (same product)",
+        "relation_id": 0
+      },
+      {
+        "neighbor_idx": 9560,
+        "relation_type": "UPU (same product)",
+        "relation_id": 0
+      },
+      {
+        "neighbor_idx": 44,
+        "relation_type": "USU (same star)",
+        "relation_id": 1
+      },
+      {
+        "neighbor_idx": 127,
+        "relation_type": "USU (same star)",
+        "relation_id": 1
+      },
+      {
+        "neighbor_idx": 178,
+        "relation_type": "USU (same star)",
+        "relation_id": 1
+      },
+      {
+        "neighbor_idx": 2999,
+        "relation_type": "UVU (same vote)",
+        "relation_id": 2
+      },
+      {
+        "neighbor_idx": 3767,
+        "relation_type": "UVU (same vote)",
+        "relation_id": 2
+      },
+      {
+        "neighbor_idx": 3781,
+        "relation_type": "UVU (same vote)",
+        "relation_id": 2
+      }
+    ],
+    "subgraph_attribution": {
+      "center_node": 9561,
+      "high_risk_neighbors": [
+        {
+          "node": 1489,
+          "fraud_prob": 0.5180613994598389,
+          "hop": 1
+        },
+        {
+          "node": 9561,
+          "fraud_prob": 0.4558211863040924,
+          "hop": 0
+        },
+        {
+          "node": 269,
+          "fraud_prob": 0.4398643374443054,
+          "hop": 1
+        }
+      ],
+      "total_explored": 52
+    },
+    "relation_weights": {
+      "layer1": [
+        0.3347342610359192,
+        0.33553051948547363,
+        0.3297352194786072
+      ],
+      "layer2": [
+        0.3369280993938446,
+        0.33666566014289856,
+        0.32640621066093445
+      ]
+    },
+    "case_type": "False Negative (Missed Fraud)"
+  },
+  {
+    "node_idx": 9706,
+    "predicted_label": 0,
+    "fraud_probability": 0.018842268735170364,
+    "true_label": 0,
+    "feature_attribution": [
+      {
+        "feature": "feat_17",
+        "importance": 0.28864070773124695,
+        "value": 0.8769338130950928,
+        "gradient": -0.32914766669273376
+      },
+      {
+        "feature": "feat_22",
+        "importance": 0.28114429116249084,
+        "value": 0.7455307245254517,
+        "gradient": -0.377106249332428
+      },
+      {
+        "feature": "feat_16",
+        "importance": 0.19267714023590088,
+        "value": 0.5374654531478882,
+        "gradient": 0.3584921360015869
+      },
+      {
+        "feature": "feat_20",
+        "importance": 0.1849387288093567,
+        "value": -0.4808318316936493,
+        "gradient": 0.3846224844455719
+      },
+      {
+        "feature": "feat_21",
+        "importance": 0.15141475200653076,
+        "value": -0.5774898529052734,
+        "gradient": 0.2621946632862091
+      }
+    ],
+    "edge_attribution": [
+      {
+        "neighbor_idx": 1370,
+        "relation_type": "UPU (same product)",
+        "relation_id": 0
+      },
+      {
+        "neighbor_idx": 9698,
+        "relation_type": "UPU (same product)",
+        "relation_id": 0
+      },
+      {
+        "neighbor_idx": 9699,
+        "relation_type": "UPU (same product)",
+        "relation_id": 0
+      },
+      {
+        "neighbor_idx": 15,
+        "relation_type": "USU (same star)",
+        "relation_id": 1
+      },
+      {
+        "neighbor_idx": 16,
+        "relation_type": "USU (same star)",
+        "relation_id": 1
+      },
+      {
+        "neighbor_idx": 73,
+        "relation_type": "USU (same star)",
+        "relation_id": 1
+      },
+      {
+        "neighbor_idx": 808,
+        "relation_type": "UVU (same vote)",
+        "relation_id": 2
+      },
+      {
+        "neighbor_idx": 1517,
+        "relation_type": "UVU (same vote)",
+        "relation_id": 2
+      },
+      {
+        "neighbor_idx": 3009,
+        "relation_type": "UVU (same vote)",
+        "relation_id": 2
+      }
+    ],
+    "subgraph_attribution": {
+      "center_node": 9706,
+      "high_risk_neighbors": [
+        {
+          "node": 688,
+          "fraud_prob": 0.4731885492801666,
+          "hop": 1
+        },
+        {
+          "node": 9703,
+          "fraud_prob": 0.45239073038101196,
+          "hop": 1
+        },
+        {
+          "node": 9706,
+          "fraud_prob": 0.018842268735170364,
+          "hop": 0
+        }
+      ],
+      "total_explored": 51
+    },
+    "relation_weights": {
+      "layer1": [
+        0.3347342610359192,
+        0.33553051948547363,
+        0.3297352194786072
+      ],
+      "layer2": [
+        0.3369280993938446,
+        0.33666566014289856,
+        0.32640621066093445
+      ]
+    },
+    "case_type": "True Negative (Normal)"
+  }
+]
