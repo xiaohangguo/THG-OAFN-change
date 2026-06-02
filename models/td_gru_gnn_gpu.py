@@ -1,6 +1,7 @@
 """
 GPU-compatible Time-Decay GRU-GNN Fusion Module.
 Uses PyTorch sparse matrix ops instead of DGL for full CUDA support.
+v2: Added residual connections and BatchNorm for better feature preservation.
 """
 import torch
 import torch.nn as nn
@@ -26,25 +27,24 @@ class GRULayer(nn.Module):
 
 
 class SparseGraphConvLayer(nn.Module):
-    """GCN layer using sparse matrix multiplication (GPU-compatible)."""
+    """GCN layer with residual connection (GraphSAGE-style concat)."""
     def __init__(self, in_dim, out_dim):
         super().__init__()
-        self.W = nn.Linear(in_dim, out_dim)
+        self.W_neigh = nn.Linear(in_dim, out_dim)
+        self.W_self = nn.Linear(in_dim, out_dim)
+        self.bn = nn.BatchNorm1d(out_dim)
 
     def forward(self, adj, h):
-        """
-        Args:
-            adj: normalized sparse adjacency matrix (N, N), same device as h
-            h: node features (N, D)
-        """
         h_agg = torch.sparse.mm(adj, h)
-        return F.relu(self.W(h_agg))
+        h_out = self.W_neigh(h_agg) + self.W_self(h)
+        h_out = self.bn(h_out)
+        return F.relu(h_out)
 
 
 class TD_GRU_GNN_GPU(nn.Module):
     """
     GPU-compatible Time-Decay GRU-GNN.
-    Uses sparse adjacency matrix instead of DGL graph.
+    v2: Residual GNN layers preserve self-features.
     """
     def __init__(self, input_dim, hidden_dim, output_dim, num_layers=2, fusion_alpha=0.5):
         super().__init__()
@@ -59,12 +59,6 @@ class TD_GRU_GNN_GPU(nn.Module):
         self.output_proj = nn.Linear(hidden_dim, output_dim)
 
     def forward(self, adj, node_features, timestamps=None):
-        """
-        Args:
-            adj: sparse adjacency matrix (N, N) on same device
-            node_features: (N, input_dim)
-            timestamps: (N,) normalized to [0,1], or None
-        """
         num_nodes = node_features.shape[0]
         device = node_features.device
 
@@ -80,7 +74,7 @@ class TD_GRU_GNN_GPU(nn.Module):
 
         h_gnn = h_gru
         for layer in self.gnn_layers:
-            h_gnn = layer(adj, h_gnn)
+            h_gnn = layer(adj, h_gnn) + h_gnn
 
         alpha = torch.sigmoid(self.fusion_alpha)
         h_fused = alpha * h_gru_weighted + (1 - alpha) * h_gnn
