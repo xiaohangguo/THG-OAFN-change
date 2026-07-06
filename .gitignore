@@ -29,3 +29,6 @@ Thumbs.db
 
 # Experiment intermediates
 experiments/results/*.pth
+.claude/
+projects/
+scripts/
