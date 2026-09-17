@@ -1,34 +1,40 @@
-# Data files (large)
-data/ieee-cis/
-data/credit-card/
-data/*.csv
-data/*.zip
-
-# Model checkpoints (generated)
+# Data files and experiment artifacts (large or sensitive)
+data/*
+!data/README.md
+*.csv
+*.zip
+*.parquet
+*.npz
+*.pt
 *.pth
-!checkpoints/check.txt
+*.ckpt
+
+# Local financial-experiment workspace and generated outputs
+local/
+metadata/*.json
+runs/
+__results__/
+.claude/
+projects/
+scripts/diagnose.py
 
 # Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
 *.egg-info/
 .eggs/
 dist/
 build/
 
-# IDE
+# Test and tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE and OS files
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Experiment intermediates
-experiments/results/*.pth
-.claude/
-projects/
-scripts/
