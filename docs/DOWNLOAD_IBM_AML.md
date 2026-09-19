@@ -11,22 +11,50 @@
 ## 目标目录
 
 ```text
-D:\THG-OAFN-Financial-Experiment\data_cache\ibm_aml\
-├── HI-Small_Trans.csv
-└── HI-Small_accounts.csv
+D:\THG-OAFN-Financial-Experiment\
+├── secrets\
+│   └── kaggle.json          # Kaggle API token（不进 Git）
+├── data_cache\ibm_aml\
+│   ├── HI-Small_Trans.csv
+│   ├── HI-Small_accounts.csv
+│   └── HI-Small_Patterns.txt
+└── metadata\
+    └── ibm_hi_small_audit.json
 ```
 
-## 推荐下载方式
+## Kaggle 凭据（放在 D 盘）
 
-在已配置 Kaggle API token 的 PowerShell 中执行：
+从 Kaggle Settings → API → Create New Token 下载 `kaggle.json`，放入
+`D:\THG-OAFN-Financial-Experiment\secrets\kaggle.json`，然后在 PowerShell 中导出：
 
 ```powershell
-python -m pip install kaggle
-kaggle datasets download -d ealtman2019/ibm-transactions-for-anti-money-laundering-aml `
-  -p "D:\THG-OAFN-Financial-Experiment\data_cache\ibm_aml"
+$env:KAGGLE_CONFIG_DIR = "D:\THG-OAFN-Financial-Experiment\secrets"
 ```
 
-仅解压所需的 HI-Small 文件。完成后删除下载压缩包，避免重复占用空间。
+## 推荐下载方式（白名单脚本，只下 HI-Small 三个文件）
+
+```powershell
+python -m pip install kagglehub
+$env:KAGGLE_CONFIG_DIR = "D:\THG-OAFN-Financial-Experiment\secrets"
+python scripts/download_ibm_aml.py
+```
+
+脚本只下载 `HI-Small_Trans.csv`（约 476 MB）、`HI-Small_accounts.csv`（约 34 MB）、
+`HI-Small_Patterns.txt`，绝不会触碰约 42 GB 的 HI-Large 包；已存在的文件自动跳过。
+
+不要使用 `kaggle datasets download -d ealtman2019/...` 不带文件名的形式，
+那会把整个数据集（含 HI-Large）全部拉下。
+
+## 网络兜底
+
+本机实测 kaggle.com 与 storage.googleapis.com 可达。若下载超时，先走本地代理：
+
+```powershell
+$env:HTTPS_PROXY = "http://127.0.0.1:7897"
+```
+
+仍失败时用浏览器在 Kaggle 数据集页手动下载三个 HI-Small 文件，
+放入 `D:\THG-OAFN-Financial-Experiment\data_cache\ibm_aml\` 即可，审计器不关心获取方式。
 
 ## 审计门槛
 
