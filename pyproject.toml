@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "thg-oafn-financial-risk"
 version = "0.1.0"
 description = "Reproducible causal temporal graph experiments for AML risk monitoring"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10,<3.14"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
