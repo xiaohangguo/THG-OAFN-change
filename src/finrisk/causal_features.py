@@ -70,6 +70,9 @@ def causal_account_features(
         for wname in WINDOWS
         for stat in stats_names
     }
+    # Whole-history degree up to (strictly before) each transaction: sensitive
+    # to fan-in / fan-out laundering shapes.
+    features[f"{prefix}_past_count"] = np.zeros(len(df))
 
     n = len(df)
     # Iterate over account groups [start, end) in the (account, time) sort order.
@@ -79,6 +82,9 @@ def causal_account_features(
     for start, end in zip(starts, ends):
         g_ts = ts_sorted[start:end]
         g_usd = usd_sorted[start:end]
+        # Strict-past degree: index of the first row sharing this timestamp.
+        past = np.searchsorted(g_ts, g_ts, side="left")
+        features[f"{prefix}_past_count"][order[start:end]] = past
         for wname, delta in WINDOWS.items():
             stats = _window_stats_one_group(g_ts, g_usd, delta)
             for stat, values in stats.items():

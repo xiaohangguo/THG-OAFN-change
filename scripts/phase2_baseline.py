@@ -1,9 +1,9 @@
-"""Phase 2 baseline: causal features -> temporal split -> LightGBM/MLP.
+"""Phase 2 baselines: causal features -> temporal split -> LightGBM/XGBoost/MLP.
 
-Produces the first trustworthy metrics on IBM AML HI-Small under the
-experiment protocol: chronological 60/20/20 split, strictly causal account
-features, thresholds locked on validation, AUPRC + Recall@K + Precision@K,
-per-transaction predictions saved to the local workspace (never committed).
+All models share one strictly-causal feature matrix and the chronological
+60/20/20 split; every model runs the full seed list from the config; metrics
+report mean +/- std across seeds plus per-seed raw values. Thresholds for
+Recall@K / Precision@K are ranking-based (no threshold leakage).
 
 Example:
     python scripts/phase2_baseline.py --config configs/ibm_aml_hi_small.yaml
@@ -20,8 +20,12 @@ from pathlib import Path
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
+import torch
+import torch.nn as nn
+import xgboost as xgb
 import yaml
 from sklearn.metrics import average_precision_score, roc_auc_score
+from sklearn.preprocessing import StandardScaler
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -29,6 +33,8 @@ sys.path.insert(0, str(ROOT / "src"))
 from finrisk.causal_features import build_causal_features
 from finrisk.data_contract import laundering_mask, resolve_transaction_columns
 from finrisk.temporal_split import assert_split_properties, temporal_split
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def load_transactions(path: Path) -> pd.DataFrame:
@@ -61,9 +67,7 @@ def attach_features(df: pd.DataFrame) -> pd.DataFrame:
     for col in ("Payment Format", "Payment Currency", "Receiving Currency"):
         base[col] = df[col].astype("category").cat.codes
 
-    banks = pd.concat(
-        [df["src_bank"].astype(str), df["dst_bank"].astype(str)], axis=1
-    )
+    banks = pd.concat([df["src_bank"].astype(str), df["dst_bank"].astype(str)], axis=1)
     base["same_bank"] = (banks.iloc[:, 0] == banks.iloc[:, 1]).astype(np.int8)
 
     out = pd.concat([base, causal], axis=1)
@@ -95,13 +99,20 @@ def evaluate(y_true: np.ndarray, score: np.ndarray, capacities: list[float]) -> 
     return metrics
 
 
-def run_lightgbm(X_tr, y_tr, X_va, y_va, X_te, seed) -> dict:
+def run_lightgbm(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
+    def auprc_metric(y_true, y_pred):
+        return "auprc", average_precision_score(y_true, y_pred), True
+
     model = lgb.LGBMClassifier(
         objective="binary",
-        n_estimators=600,
-        learning_rate=0.05,
-        num_leaves=63,
-        scale_pos_weight=float((y_tr == 0).sum() / max((y_tr == 1).sum(), 1)),
+        n_estimators=3000,
+        learning_rate=0.03,
+        num_leaves=127,
+        min_child_samples=200,
+        feature_fraction=0.9,
+        bagging_fraction=0.8,
+        bagging_freq=1,
+        scale_pos_weight=25.0,
         random_state=seed,
         n_jobs=-1,
         verbose=-1,
@@ -109,72 +120,151 @@ def run_lightgbm(X_tr, y_tr, X_va, y_va, X_te, seed) -> dict:
     model.fit(
         X_tr, y_tr,
         eval_set=[(X_va, y_va)],
-        callbacks=[lgb.early_stopping(50, verbose=False)],
+        eval_metric=auprc_metric,
+        callbacks=[lgb.early_stopping(200, verbose=False)],
     )
-    return {
-        "validation": model.predict_proba(X_va)[:, 1],
-        "test": model.predict_proba(X_te)[:, 1],
-        "best_iteration": int(model.best_iteration_ or 600),
-    }
+    return model.predict_proba(X_te)[:, 1]
+
+
+def run_xgboost(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
+    model = xgb.XGBClassifier(
+        n_estimators=3000,
+        learning_rate=0.05,
+        max_depth=8,
+        subsample=0.8,
+        colsample_bytree=0.9,
+        scale_pos_weight=25.0,
+        eval_metric="aucpr",
+        early_stopping_rounds=200,
+        random_state=seed,
+        device=DEVICE,
+    )
+    model.fit(X_tr, y_tr, eval_set=[(X_va, y_va)], verbose=False)
+    return model.predict_proba(X_te)[:, 1]
+
+
+class MLP(nn.Module):
+    def __init__(self, dim: int) -> None:
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(dim, 256), nn.LayerNorm(256), nn.ReLU(), nn.Dropout(0.2),
+            nn.Linear(256, 128), nn.LayerNorm(128), nn.ReLU(), nn.Dropout(0.2),
+            nn.Linear(128, 1),
+        )
+
+    def forward(self, x):
+        return self.net(x).squeeze(-1)
+
+
+def run_mlp(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
+    scaler = StandardScaler().fit(X_tr)
+    arrays = [scaler.transform(part).astype(np.float32) for part in (X_tr, X_va, X_te)]
+    x_tr, x_va, x_te = [torch.from_numpy(a).to(DEVICE) for a in arrays]
+    y_tr_t = torch.from_numpy(y_tr.astype(np.float32)).to(DEVICE)
+    y_va_t = torch.from_numpy(y_va.astype(np.float32)).to(DEVICE)
+
+    torch.manual_seed(seed)
+    model = MLP(x_tr.shape[1]).to(DEVICE)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
+    pos_weight = torch.tensor([25.0], device=DEVICE)
+    loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+
+    best_auprc, best_state, patience = -1.0, None, 0
+    batch = 65536
+    n = len(x_tr)
+    for epoch in range(30):
+        model.train()
+        perm = torch.randperm(n, device=DEVICE)
+        for i in range(0, n, batch):
+            idx = perm[i : i + batch]
+            optimizer.zero_grad()
+            loss = loss_fn(model(x_tr[idx]), y_tr_t[idx])
+            loss.backward()
+            optimizer.step()
+        model.eval()
+        with torch.no_grad():
+            val_score = torch.sigmoid(model(x_va)).cpu().numpy()
+        auprc = average_precision_score(y_va, val_score)
+        if auprc > best_auprc:
+            best_auprc, patience = auprc, 0
+            best_state = {k: v.detach().clone() for k, v in model.state_dict().items()}
+        else:
+            patience += 1
+            if patience >= 3:
+                break
+    model.load_state_dict(best_state)
+    model.eval()
+    with torch.no_grad():
+        return torch.sigmoid(model(x_te)).cpu().numpy()
+
+
+MODELS = {"lightgbm": run_lightgbm, "xgboost": run_xgboost, "mlp": run_mlp}
+
+
+def aggregate(per_seed: list[dict]) -> dict:
+    keys = per_seed[0].keys()
+    out = {}
+    for key in keys:
+        values = np.array([run[key] for run in per_seed])
+        out[key] = {"mean": float(values.mean()), "std": float(values.std())}
+    return out
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Phase 2 causal-feature baselines.")
+    parser = argparse.ArgumentParser(description="Phase 2 multi-model baselines.")
     parser.add_argument("--config", type=Path, default=ROOT / "configs/ibm_aml_hi_small.yaml")
     parser.add_argument("--transactions", type=Path, default=None)
+    parser.add_argument("--models", nargs="+", default=list(MODELS), choices=list(MODELS))
     args = parser.parse_args()
 
     config = yaml.safe_load(args.config.read_text(encoding="utf-8"))
     tx_path = args.transactions or Path(config["data"]["transactions_path"])
     if not tx_path.is_file():
-        parser.error(f"transaction file not found: {tx_path} (download + audit first)")
+        parser.error(f"transaction file not found: {tx_path}")
 
     df = load_transactions(tx_path)
-    print(f"transactions: {len(df):,}  positives: {df['label'].sum():,} "
-          f"({df['label'].mean():.4%})", flush=True)
+    print(f"transactions: {len(df):,}  positives: {df['label'].sum():,} ({df['label'].mean():.4%})", flush=True)
 
     split = temporal_split(df, "ts", config["split"]["train_ratio"], config["split"]["validation_ratio"])
     assert_split_properties(df, "ts", split)
-    for name in ("train", "validation", "test"):
-        part = df[split == name]
-        print(f"{name:>10}: {len(part):,} rows  positives {part['label'].sum():,}  "
-              f"[{part['ts'].min()} .. {part['ts'].max()}]", flush=True)
-
-    X = attach_features(df)
-    feature_cols = [c for c in X.columns if c not in ("label",)]
-    print(f"features: {len(feature_cols)}", flush=True)
-
     masks = {name: (split == name).to_numpy() for name in ("train", "validation", "test")}
     y = df["label"].to_numpy()
+    for name in ("train", "validation", "test"):
+        part = df[split == name]
+        print(f"{name:>10}: {len(part):,} rows  positives {part['label'].sum():,}", flush=True)
 
-    seed = int(config["project"]["seed_list"][0])
-    result = run_lightgbm(
-        X.loc[masks["train"], feature_cols], y[masks["train"]],
-        X.loc[masks["validation"], feature_cols], y[masks["validation"]],
-        X.loc[masks["test"], feature_cols],
-        seed,
-    )
+    print("building causal features (single pass, shared by all models)...", flush=True)
+    X = attach_features(df)
+    feature_cols = list(X.columns)
+    print(f"features: {len(feature_cols)}", flush=True)
+
     capacities = config["evaluation"]["alert_capacities"]
-    metrics = {
-        "validation": evaluate(y[masks["validation"]], result["validation"], capacities),
-        "test": evaluate(y[masks["test"]], result["test"], capacities),
-    }
-    metrics["best_iteration"] = result["best_iteration"]
-
+    seeds = config["project"]["seed_list"]
     out_dir = Path(config["project"]["local_workspace"]) / "results" / "phase2"
     out_dir.mkdir(parents=True, exist_ok=True)
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    (out_dir / f"lightgbm_{run_id}_metrics.json").write_text(
-        json.dumps(metrics, indent=2), encoding="utf-8"
-    )
-    preds = pd.DataFrame({"split": split.to_numpy(), "y_true": y})
-    scores = np.full(len(df), np.nan)
-    scores[masks["validation"]] = result["validation"]
-    scores[masks["test"]] = result["test"]
-    preds["y_score"] = scores
-    preds.to_parquet(out_dir / f"lightgbm_{run_id}_predictions.parquet", index=False)
 
-    print(json.dumps(metrics, indent=2), flush=True)
+    report: dict = {"run_id": run_id, "features": len(feature_cols), "seeds": seeds, "models": {}}
+    for model_name in args.models:
+        runner = MODELS[model_name]
+        per_seed_test = []
+        for seed in seeds:
+            # Validation is consumed by early stopping (model selection), so
+            # only test metrics are reported to avoid optimistic bias.
+            test_score = runner(X.loc[masks["train"], feature_cols], y[masks["train"]],
+                                X.loc[masks["validation"], feature_cols], y[masks["validation"]],
+                                X.loc[masks["test"], feature_cols], seed)
+            per_seed_test.append(evaluate(y[masks["test"]], test_score, capacities))
+            print(f"[{model_name}] seed {seed} test AUPRC={per_seed_test[-1]['auprc']:.4f}", flush=True)
+            pd.DataFrame({"y_true": y[masks["test"]], "y_score": test_score}).to_parquet(
+                out_dir / f"{model_name}_{run_id}_seed{seed}_test_predictions.parquet", index=False
+            )
+        report["models"][model_name] = {"test": aggregate(per_seed_test)}
+
+    (out_dir / f"multi_model_{run_id}_metrics.json").write_text(
+        json.dumps(report, indent=2), encoding="utf-8"
+    )
+    print(json.dumps(report, indent=2), flush=True)
     print(f"saved -> {out_dir}", flush=True)
     return 0
 
