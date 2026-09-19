@@ -151,7 +151,7 @@ def main() -> int:
     result = run_lightgbm(
         X.loc[masks["train"], feature_cols], y[masks["train"]],
         X.loc[masks["validation"], feature_cols], y[masks["validation"]],
-        X.loc[masks["test"], feature_cols], y[masks["test"]],
+        X.loc[masks["test"], feature_cols],
         seed,
     )
     capacities = config["evaluation"]["alert_capacities"]
