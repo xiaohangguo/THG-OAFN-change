@@ -30,7 +30,7 @@ from sklearn.preprocessing import StandardScaler
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from finrisk.causal_features import build_causal_features
+from finrisk.causal_features import build_causal_features, causal_entity_features
 from finrisk.data_contract import laundering_mask, resolve_transaction_columns
 from finrisk.temporal_split import assert_split_properties, temporal_split
 
@@ -69,10 +69,37 @@ def attach_features(df: pd.DataFrame) -> pd.DataFrame:
 
     banks = pd.concat([df["src_bank"].astype(str), df["dst_bank"].astype(str)], axis=1)
     base["same_bank"] = (banks.iloc[:, 0] == banks.iloc[:, 1]).astype(np.int8)
+    # Self-loop: source account == destination account (rare, low laundering rate).
+    base["is_self_loop"] = (df["src_account"].astype(str) == df["dst_account"].astype(str)).astype(np.int8)
 
     out = pd.concat([base, causal], axis=1)
     out.columns = [c.replace(" ", "_").lower() for c in out.columns]
+
+    if {"src_entity", "dst_entity"}.issubset(df.columns):
+        entity = causal_entity_features(df, "ts", "src_account", "dst_account",
+                                        "src_entity", "dst_entity", "usd_amount")
+        out = pd.concat([out, entity], axis=1)
     return out
+
+
+def attach_entities(df: pd.DataFrame, accounts_path: Path) -> pd.DataFrame:
+    """Attach per-transaction source/destination Entity IDs from the accounts CSV.
+
+    Account numbers are normalized (strip + drop leading zeros) on both sides so
+    the join is exact; a missing mapping yields an empty entity (isolated node).
+    """
+    import numpy as np
+    acc = pd.read_csv(accounts_path, usecols=["Account Number", "Entity ID"])
+    acc["acc"] = acc["Account Number"].astype(str).str.strip().str.lstrip("0").replace("", "0")
+    mapping = dict(zip(acc["acc"], acc["Entity ID"]))
+
+    def norm_series(s: pd.Series) -> pd.Series:
+        return s.astype(str).str.strip().str.lstrip("0").replace("", "0")
+
+    df = df.copy()
+    df["src_entity"] = norm_series(df["src_account"]).map(mapping).fillna("").astype(str)
+    df["dst_entity"] = norm_series(df["dst_account"]).map(mapping).fillna("").astype(str)
+    return df
 
 
 def recall_at_k(y_true: np.ndarray, score: np.ndarray, fraction: float) -> float:
@@ -103,6 +130,13 @@ def run_lightgbm(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
     def auprc_metric(y_true, y_pred):
         return "auprc", average_precision_score(y_true, y_pred), True
 
+    # LightGBM 4.7 在大规模稀疏 DataFrame 上偶现访问违例；使用独立副本 + 显式 dtype 规避。
+    X_tr_ = X_tr.astype("float32", copy=True)
+    X_va_ = X_va.astype("float32", copy=True)
+    X_te_ = X_te.astype("float32", copy=True)
+    y_tr_ = y_tr.astype(np.int32)
+    y_va_ = y_va.astype(np.int32)
+
     model = lgb.LGBMClassifier(
         objective="binary",
         n_estimators=3000,
@@ -118,12 +152,12 @@ def run_lightgbm(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
         verbose=-1,
     )
     model.fit(
-        X_tr, y_tr,
-        eval_set=[(X_va, y_va)],
+        X_tr_, y_tr_,
+        eval_set=[(X_va_, y_va_)],
         eval_metric=auprc_metric,
         callbacks=[lgb.early_stopping(200, verbose=False)],
     )
-    return model.predict_proba(X_te)[:, 1]
+    return model.predict_proba(X_te_)[:, 1]
 
 
 def run_xgboost(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
@@ -215,6 +249,8 @@ def main() -> int:
     parser.add_argument("--config", type=Path, default=ROOT / "configs/ibm_aml_hi_small.yaml")
     parser.add_argument("--transactions", type=Path, default=None)
     parser.add_argument("--models", nargs="+", default=list(MODELS), choices=list(MODELS))
+    parser.add_argument("--attach-entities", action="store_true",
+                        help="join Entity IDs from the accounts CSV and add entity-level causal features")
     args = parser.parse_args()
 
     config = yaml.safe_load(args.config.read_text(encoding="utf-8"))
@@ -223,6 +259,13 @@ def main() -> int:
         parser.error(f"transaction file not found: {tx_path}")
 
     df = load_transactions(tx_path)
+
+    ac_path = config["data"].get("accounts_path")
+    if args.attach_entities:
+        if not ac_path or not Path(ac_path).is_file():
+            parser.error(f"accounts path not found for entity features: {ac_path}")
+        print("attaching Entity IDs (strict past, per-entity)...", flush=True)
+        df = attach_entities(df, Path(ac_path))
     print(f"transactions: {len(df):,}  positives: {df['label'].sum():,} ({df['label'].mean():.4%})", flush=True)
 
     split = temporal_split(df, "ts", config["split"]["train_ratio"], config["split"]["validation_ratio"])

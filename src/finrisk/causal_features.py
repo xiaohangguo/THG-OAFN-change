@@ -103,4 +103,105 @@ def build_causal_features(
     """Combine sent-side and received-side causal features."""
     sent = causal_account_features(df, timestamp_col, source_account_col, usd_amount_col, prefix="src")
     received = causal_account_features(df, timestamp_col, destination_account_col, usd_amount_col, prefix="dst")
-    return pd.concat([sent, received], axis=1)
+    pair = causal_pair_features(df, timestamp_col, source_account_col, destination_account_col, usd_amount_col)
+    return pd.concat([sent, received, pair], axis=1)
+
+
+def causal_pair_features(
+    df: pd.DataFrame,
+    timestamp_col: str,
+    source_account_col: str,
+    destination_account_col: str,
+    usd_amount_col: str,
+) -> pd.DataFrame:
+    """Strictly-causal account-pair features: past interaction strength between the specific source→destination pair."""
+
+    ts_ns = pd.to_datetime(df[timestamp_col]).astype("int64").to_numpy()
+    src = df[source_account_col].astype(str).to_numpy()
+    dst = df[destination_account_col].astype(str).to_numpy()
+    usd = df[usd_amount_col].to_numpy(dtype="float64")
+
+    order = np.lexsort((ts_ns, src, dst))
+    ts_sorted = ts_ns[order]
+    src_sorted = src[order]
+    dst_sorted = dst[order]
+    usd_sorted = usd[order]
+
+    # build pair key as bytes for fast compare
+    n = len(df)
+    key = np.empty(n, dtype=object)
+    for i in range(n):
+        key[i] = src_sorted[i] + "\x1f" + dst_sorted[i]
+
+    stats_names = ("count", "sum", "mean", "std")
+    features = {f"pair_{w}_{stat}": np.zeros(n)
+                for w in WINDOWS for stat in stats_names}
+    features["pair_past_count"] = np.zeros(n)
+
+    # Iterate groups by pair in (pair, time) order.
+    boundaries = np.flatnonzero(key[1:] != key[:-1]) + 1
+    starts = np.concatenate([[0], boundaries])
+    ends = np.concatenate([boundaries, [n]])
+    for start, end in zip(starts, ends):
+        g_ts = ts_sorted[start:end]
+        g_usd = usd_sorted[start:end]
+        past = np.searchsorted(g_ts, g_ts, side="left")
+        features["pair_past_count"][order[start:end]] = past
+        for wname, delta in WINDOWS.items():
+            stats = _window_stats_one_group(g_ts, g_usd, delta)
+            for stat, values in stats.items():
+                features[f"pair_{wname}_{stat}"][order[start:end]] = values
+
+    return pd.DataFrame(features, index=df.index)
+
+
+def causal_entity_features(
+    df: pd.DataFrame,
+    timestamp_col: str,
+    source_account_col: str,
+    destination_account_col: str,
+    source_entity_col: str,
+    destination_entity_col: str,
+    usd_amount_col: str,
+) -> pd.DataFrame:
+    """Strictly-causal *brother-account* entity features (difference form).
+
+    Each transaction is labelled by the legal ``Entity ID`` of its source and
+    destination account. Naively aggregating entity history was found to *hurt*
+    (mid-size XGBoost AUPRC 0.0863 -> 0.0783) because ~62% of entities own a
+    single account, making entity stats a perfect duplicate of account stats
+    (pure noise). The value of entities in AML layering is a legal entity
+    shuttling value across *multiple* of its own accounts.
+
+    So we return only the *difference* between entity-level history and
+    account-level history: window statistics of the entity's *other* (brother)
+    accounts. It is naturally 0 for single-account entities (no brothers), adding
+    no noise there, and exposes layering where multi-account shuttling exists.
+    Visibility is the same strict-past rule as account features.
+    """
+    # same-entity transfer flag (intra-entity layering).
+    ent_src = df[source_entity_col].astype(str).to_numpy()
+    ent_dst = df[destination_entity_col].astype(str).to_numpy()
+    out = {"same_entity_transfer": (ent_src == ent_dst).astype(np.int8)}
+
+    # window names shared between account & entity stats
+    windows = ["w1h", "w24h", "w7d"]
+    for side, acc_col, ent_col in (
+        ("src", source_account_col, source_entity_col),
+        ("dst", destination_account_col, destination_entity_col),
+    ):
+        acc_stats = causal_account_features(
+            df, timestamp_col, acc_col, usd_amount_col, prefix=f"{side}_account"
+        )
+        ent_stats = causal_account_features(
+            df, timestamp_col, ent_col, usd_amount_col, prefix=f"{side}_entity"
+        )
+        # Brother contribution = entity_* - account_* per window (saturate at 0).
+        for w in windows:
+            c = f"{side}_bro_{w}_count"
+            s = f"{side}_bro_{w}_sum"
+            out[c] = np.maximum(0.0, ent_stats[f"{side}_entity_{w}_count"].to_numpy()
+                                - acc_stats[f"{side}_account_{w}_count"].to_numpy())
+            out[s] = np.maximum(0.0, ent_stats[f"{side}_entity_{w}_sum"].to_numpy()
+                                - acc_stats[f"{side}_account_{w}_sum"].to_numpy())
+    return pd.DataFrame(out, index=df.index)
