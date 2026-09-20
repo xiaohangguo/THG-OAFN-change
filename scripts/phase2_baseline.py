@@ -104,15 +104,18 @@ def run_xgboost(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
     # locked to CPU. Override with XGB_DEVICE=cuda only for speed experiments.
     device = os.environ.get("XGB_DEVICE", "cpu")
     model = xgb.XGBClassifier(
-        n_estimators=3000,
+        n_estimators=4000,
         learning_rate=0.05,
         max_depth=8,
+        min_child_weight=50,
         subsample=0.8,
-        colsample_bytree=0.9,
+        colsample_bytree=0.7,
+        reg_lambda=5.0,
         scale_pos_weight=25.0,
         eval_metric="aucpr",
         early_stopping_rounds=200,
         random_state=seed,
+        tree_method="hist",
         device=device,
     )
     model.fit(X_tr, y_tr, eval_set=[(X_va, y_va)], verbose=False)

@@ -44,6 +44,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="SHAP attribution for XGBoost risk model.")
     parser.add_argument("--config", type=Path, default=ROOT / "configs/ibm_aml_hi_small.yaml")
     parser.add_argument("--attach-entities", action="store_true")
+    parser.add_argument("--with-profiles", action="store_true",
+                        help="append 18 snapshot profile columns before attribution")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--n-cases", type=int, default=20)
     parser.add_argument("--fidelity-k", type=int, default=10)
@@ -62,10 +64,17 @@ def main() -> int:
 
     X = attach_features(df)
     feature_cols = list(X.columns)
+    if args.with_profiles:
+        from finrisk.graph_builder import build_global_account_index, extract_profile_columns
+
+        src_gid, dst_gid, _ = build_global_account_index(df)
+        X = X.join(extract_profile_columns(df, src_gid, dst_gid))
+        feature_cols = list(X.columns)
+        print(f"attribution feature set: {len(feature_cols)} cols", flush=True)
 
     model = xgb.XGBClassifier(
-        n_estimators=3000, learning_rate=0.05, max_depth=8, subsample=0.8,
-        colsample_bytree=0.9, scale_pos_weight=25.0, eval_metric="aucpr",
+        n_estimators=4000, learning_rate=0.05, max_depth=8, min_child_weight=50, subsample=0.8,
+        colsample_bytree=0.7, reg_lambda=5.0, scale_pos_weight=25.0, eval_metric="aucpr",
         early_stopping_rounds=200, random_state=args.seed, device=DEVICE, tree_method="hist",
     )
     model.fit(X[masks["train"]], y[masks["train"]], eval_set=[(X[masks["validation"]], y[masks["validation"]])], verbose=False)

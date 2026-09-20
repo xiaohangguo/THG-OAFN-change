@@ -135,8 +135,9 @@ def run_graph_model(bands, split_labels, y, X_gpu, seed, args, capacities):
     emb_dim = encoder.out_dim
     scorer = TxnScorer(emb_dim, X_gpu.shape[1] if not args.no_txn_feats else 0).to(DEVICE)
     optimizer = torch.optim.AdamW(
-        list(encoder.parameters()) + list(scorer.parameters()), lr=1e-3, weight_decay=1e-4
+        list(encoder.parameters()) + list(scorer.parameters()), lr=args.lr, weight_decay=1e-4
     )
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.max_epochs)
     pos_weight = torch.tensor([25.0], device=DEVICE)
     loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
 
@@ -148,19 +149,26 @@ def run_graph_model(bands, split_labels, y, X_gpu, seed, args, capacities):
     best_auprc, best_state, patience = -1.0, None, 0
     for epoch in range(args.max_epochs):
         encoder.train(); scorer.train()
-        order = np.arange(len(bands))
-        for i in order:
+        for i in range(len(bands)):
             band = bands[i]
             mask = split_of(band) == "train"
-            if mask.sum() == 0:
+            n_train = int(mask.sum())
+            if n_train == 0:
                 continue
-            idx = torch.from_numpy(np.flatnonzero(mask)).to(DEVICE)
-            optimizer.zero_grad()
-            logits_all = forward_band(encoder, scorer, band, not args.no_graph, not args.no_txn_feats)
-            logits = logits_all[idx]
-            loss = loss_fn(logits, y_t[band.rows][idx])
-            loss.backward()
-            optimizer.step()
+            train_idx_all = np.flatnonzero(mask)
+            # Split the band's training rows into minibatches: ~4x more
+            # optimizer steps per epoch than the old one-step-per-band loop.
+            n_batches = max(1, min(args.band_batches, int(np.ceil(n_train / 8192))))
+            np.random.shuffle(train_idx_all)
+            for b_start in range(0, n_train, int(np.ceil(n_train / n_batches))):
+                idx = torch.from_numpy(train_idx_all[b_start : b_start + int(np.ceil(n_train / n_batches))]).to(DEVICE)
+                optimizer.zero_grad()
+                logits_all = forward_band(encoder, scorer, band, not args.no_graph, not args.no_txn_feats)
+                logits = logits_all[idx]
+                loss = loss_fn(logits, y_t[band.rows][idx])
+                loss.backward()
+                optimizer.step()
+        scheduler.step()
 
         encoder.eval(); scorer.eval()
         with torch.no_grad():
@@ -221,6 +229,9 @@ def main() -> int:
     parser.add_argument("--seeds", nargs="+", type=int, default=None)
     parser.add_argument("--max-epochs", type=int, default=30)
     parser.add_argument("--patience", type=int, default=3)
+    parser.add_argument("--band-batches", type=int, default=4,
+                        help="minibatches per band per epoch (fixes step starvation)")
+    parser.add_argument("--lr", type=float, default=3e-3)
     parser.add_argument("--tag", default="graphsage")
     args = parser.parse_args()
 
