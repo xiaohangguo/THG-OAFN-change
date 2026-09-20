@@ -73,6 +73,16 @@ class TxnScorer(nn.Module):
         return self.net(torch.cat([h_src, h_dst, seen, txn], dim=-1)).squeeze(-1)
 
 
+def _to_local(node_ids: np.ndarray, gids: np.ndarray) -> np.ndarray:
+    """Vectorized global->local mapping over sorted node ids (-1 if absent)."""
+    if len(node_ids) == 0:
+        return np.full(len(gids), -1, dtype=np.int64)
+    pos = np.searchsorted(node_ids, gids)
+    pos_c = np.minimum(pos, len(node_ids) - 1)
+    ok = (pos < len(node_ids)) & (node_ids[pos_c] == gids)
+    return np.where(ok, pos, -1).astype(np.int64)
+
+
 class BandData:
     """Per-band precomputed tensors for training/inference."""
 
@@ -81,8 +91,8 @@ class BandData:
         self.rows = snap.txn_rows
         self.x = torch.from_numpy(snap.node_feat).to(DEVICE)
         self.edge_index = torch.from_numpy(snap.edge_index).to(DEVICE)
-        l_src = snap.localize(snap.txn_src)
-        l_dst = snap.localize(snap.txn_dst)
+        l_src = _to_local(snap.node_ids, snap.txn_src)
+        l_dst = _to_local(snap.node_ids, snap.txn_dst)
         self.l_src = torch.from_numpy(l_src).to(DEVICE)
         self.l_dst = torch.from_numpy(l_dst).to(DEVICE)
         self.seen = torch.from_numpy(
@@ -234,7 +244,12 @@ def main() -> int:
     X_gpu = torch.from_numpy(X_np).to(DEVICE)
     bands = [BandData(snap, X_gpu) for snap in snapshots]
     n_empty = sum(1 for b in bands if b.edge_index.shape[1] == 0)
-    print(f"bands: {len(bands)} (empty-window bands: {n_empty})", flush=True)
+    # Anti-regression: the graph path must actually see the accounts.
+    seen_rates = [float(b.seen[:, 0].mean().item()) for b in bands if len(b.rows) > 0 and b.edge_index.shape[1] > 0]
+    print(f"bands: {len(bands)} (empty-window bands: {n_empty}); "
+          f"src-seen rate across graphed bands: min={min(seen_rates):.3f} mean={np.mean(seen_rates):.3f}", flush=True)
+    if np.mean(seen_rates) < 0.5:
+        raise RuntimeError("src-seen rate < 50%: graph embeddings would be mostly zero — mapping bug")
 
     seeds = args.seeds or config["project"]["seed_list"]
     capacities = config["evaluation"]["alert_capacities"]
