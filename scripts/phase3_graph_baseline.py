@@ -180,7 +180,9 @@ def run_graph_model(bands, split_labels, y, X_gpu, seed, args, capacities):
                 mask = split_of(band) == "validation"
                 if mask.sum() == 0:
                     continue
-                logits = forward_band(encoder, scorer, band, not args.no_graph, not args.no_txn_feats)
+                # Validate in the CURRENT mode: during scorer warmup the graph
+                # path is off in eval too (matching the training dynamics).
+                logits = forward_band(encoder, scorer, band, graph_on, not args.no_txn_feats)
                 scores.append((band.rows[mask], torch.sigmoid(logits).cpu().numpy()[mask]))
             if not scores:
                 break
