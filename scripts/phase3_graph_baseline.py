@@ -149,6 +149,9 @@ def run_graph_model(bands, split_labels, y, X_gpu, seed, args, capacities):
     best_auprc, best_state, patience = -1.0, None, 0
     for epoch in range(args.max_epochs):
         encoder.train(); scorer.train()
+        # Warmup epochs keep the graph path off: the scorer first learns the
+        # strong tabular mapping, then embeddings join (anti-lazy-companion).
+        graph_on = (epoch >= args.warmup_graph_epochs) and not args.no_graph
         for i in range(len(bands)):
             band = bands[i]
             mask = split_of(band) == "train"
@@ -163,7 +166,7 @@ def run_graph_model(bands, split_labels, y, X_gpu, seed, args, capacities):
             for b_start in range(0, n_train, int(np.ceil(n_train / n_batches))):
                 idx = torch.from_numpy(train_idx_all[b_start : b_start + int(np.ceil(n_train / n_batches))]).to(DEVICE)
                 optimizer.zero_grad()
-                logits_all = forward_band(encoder, scorer, band, not args.no_graph, not args.no_txn_feats)
+                logits_all = forward_band(encoder, scorer, band, graph_on, not args.no_txn_feats)
                 logits = logits_all[idx]
                 loss = loss_fn(logits, y_t[band.rows][idx])
                 loss.backward()
@@ -233,7 +236,9 @@ def main() -> int:
     parser.add_argument("--patience", type=int, default=3)
     parser.add_argument("--band-batches", type=int, default=4,
                         help="minibatches per band per epoch (fixes step starvation)")
-    parser.add_argument("--lr", type=float, default=3e-3)
+    parser.add_argument("--lr", type=float, default=1e-3)
+    parser.add_argument("--warmup-graph-epochs", type=int, default=5,
+                        help="epochs before the graph path joins training (scorer warmup)")
     parser.add_argument("--tag", default="graphsage")
     args = parser.parse_args()
 
