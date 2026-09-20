@@ -226,6 +226,8 @@ def main() -> int:
     parser.add_argument("--no-txn-feats", action="store_true", help="ablation: embeddings only")
     parser.add_argument("--conv", choices=["sage", "gatv2"], default="sage",
                         help="graph aggregation: sage (mean) or gatv2 (attention)")
+    parser.add_argument("--strong-profiles", action="store_true",
+                        help="20-dim behavioural node profiles (literature GNN form) instead of the locked 8-dim")
     parser.add_argument("--seeds", nargs="+", type=int, default=None)
     parser.add_argument("--max-epochs", type=int, default=30)
     parser.add_argument("--patience", type=int, default=3)
@@ -264,6 +266,7 @@ def main() -> int:
         df, src_gid, dst_gid,
         band=pd.Timedelta(hours=args.band_hours),
         window=pd.Timedelta(days=args.window_days),
+        strong_profiles=args.strong_profiles,
     )
     X_gpu = torch.from_numpy(X_np).to(DEVICE)
     bands = [BandData(snap, X_gpu) for snap in snapshots]
