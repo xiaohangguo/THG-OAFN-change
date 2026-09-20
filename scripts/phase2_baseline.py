@@ -190,6 +190,8 @@ def main() -> int:
                         help="join Entity IDs from the accounts CSV and add entity-level causal features")
     parser.add_argument("--with-profiles", action="store_true",
                         help="append 18 strictly-past snapshot profile columns (probe: +0.098 AUPRC)")
+    parser.add_argument("--seeds", nargs="+", type=int, default=None,
+                        help="override the config seed list (e.g. single-seed exploration)")
     args = parser.parse_args()
 
     config = yaml.safe_load(args.config.read_text(encoding="utf-8"))
@@ -227,7 +229,7 @@ def main() -> int:
     print(f"features: {len(feature_cols)}", flush=True)
 
     capacities = config["evaluation"]["alert_capacities"]
-    seeds = config["project"]["seed_list"]
+    seeds = args.seeds or config["project"]["seed_list"]
     out_dir = Path(config["project"]["local_workspace"]) / "results" / "phase2"
     out_dir.mkdir(parents=True, exist_ok=True)
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
