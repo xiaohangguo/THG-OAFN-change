@@ -188,6 +188,8 @@ def main() -> int:
     parser.add_argument("--models", nargs="+", default=list(MODELS), choices=list(MODELS))
     parser.add_argument("--attach-entities", action="store_true",
                         help="join Entity IDs from the accounts CSV and add entity-level causal features")
+    parser.add_argument("--with-profiles", action="store_true",
+                        help="append 18 strictly-past snapshot profile columns (probe: +0.098 AUPRC)")
     args = parser.parse_args()
 
     config = yaml.safe_load(args.config.read_text(encoding="utf-8"))
@@ -215,6 +217,12 @@ def main() -> int:
 
     print("building causal features (single pass, shared by all models)...", flush=True)
     X = attach_features(df)
+    if args.with_profiles:
+        from finrisk.graph_builder import build_global_account_index, extract_profile_columns
+
+        print("building snapshot profile columns...", flush=True)
+        src_gid, dst_gid, _ = build_global_account_index(df)
+        X = pd.concat([X, extract_profile_columns(df, src_gid, dst_gid)], axis=1)
     feature_cols = list(X.columns)
     print(f"features: {len(feature_cols)}", flush=True)
 

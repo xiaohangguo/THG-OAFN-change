@@ -32,7 +32,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import yaml
 from sklearn.metrics import average_precision_score
-from torch_geometric.nn import SAGEConv
+from torch_geometric.nn import GATv2Conv, SAGEConv
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -48,10 +48,21 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 class GraphEncoder(nn.Module):
-    def __init__(self, in_dim: int, hidden: int, layers: int = 2) -> None:
+    def __init__(self, in_dim: int, hidden: int, layers: int = 2, conv: str = "sage") -> None:
         super().__init__()
-        dims = [in_dim] + [hidden] * layers
-        self.convs = nn.ModuleList(SAGEConv(a, b) for a, b in zip(dims[:-1], dims[1:]))
+        self.conv_type = conv
+        if conv == "gatv2":
+            heads = 4
+            per_head = max(hidden // heads, 8)
+            dims = [in_dim] + [per_head * heads] * layers
+            self.convs = nn.ModuleList(
+                GATv2Conv(a, b // heads, heads=heads) for a, b in zip(dims[:-1], dims[1:])
+            )
+            self.out_dim = per_head * heads
+        else:
+            dims = [in_dim] + [hidden] * layers
+            self.convs = nn.ModuleList(SAGEConv(a, b) for a, b in zip(dims[:-1], dims[1:]))
+            self.out_dim = hidden
 
     def forward(self, x, edge_index):
         for conv in self.convs:
@@ -108,7 +119,7 @@ def forward_band(encoder, scorer, band: BandData, use_graph: bool, use_txn: bool
         h_src = torch.where((band.l_src >= 0).unsqueeze(1), h[band.l_src.clamp(min=0)], zero)
         h_dst = torch.where((band.l_dst >= 0).unsqueeze(1), h[band.l_dst.clamp(min=0)], zero)
     else:
-        emb_dim = next(encoder.convs.children().__iter__()).out_channels if use_graph else 64
+        emb_dim = encoder.out_dim
         h_src = torch.zeros(len(band.rows), emb_dim, device=DEVICE)
         h_dst = torch.zeros(len(band.rows), emb_dim, device=DEVICE)
     txn = band.txn[band.rows] if use_txn else torch.zeros(len(band.rows), 0, device=DEVICE)
@@ -120,8 +131,8 @@ def run_graph_model(bands, split_labels, y, X_gpu, seed, args, capacities):
     np.random.seed(seed)
 
     in_dim = bands[0].x.shape[1]
-    encoder = GraphEncoder(in_dim, args.hidden, args.layers).to(DEVICE)
-    emb_dim = args.hidden
+    encoder = GraphEncoder(in_dim, args.hidden, args.layers, conv=args.conv).to(DEVICE)
+    emb_dim = encoder.out_dim
     scorer = TxnScorer(emb_dim, X_gpu.shape[1] if not args.no_txn_feats else 0).to(DEVICE)
     optimizer = torch.optim.AdamW(
         list(encoder.parameters()) + list(scorer.parameters()), lr=1e-3, weight_decay=1e-4
@@ -205,6 +216,8 @@ def main() -> int:
     parser.add_argument("--layers", type=int, default=2)
     parser.add_argument("--no-graph", action="store_true", help="ablation: zero graph embeddings")
     parser.add_argument("--no-txn-feats", action="store_true", help="ablation: embeddings only")
+    parser.add_argument("--conv", choices=["sage", "gatv2"], default="sage",
+                        help="graph aggregation: sage (mean) or gatv2 (attention)")
     parser.add_argument("--seeds", nargs="+", type=int, default=None)
     parser.add_argument("--max-epochs", type=int, default=30)
     parser.add_argument("--patience", type=int, default=3)
@@ -273,7 +286,7 @@ def main() -> int:
         "tag": args.tag,
         "config": {
             "band_hours": args.band_hours, "window_days": args.window_days,
-            "hidden": args.hidden, "layers": args.layers,
+            "hidden": args.hidden, "layers": args.layers, "conv": args.conv,
             "no_graph": args.no_graph, "no_txn_feats": args.no_txn_feats,
             "attach_entities": args.attach_entities, "txn_features": X.shape[1],
         },
