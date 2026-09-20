@@ -98,6 +98,11 @@ def run_lightgbm(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
 
 
 def run_xgboost(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
+    import os
+
+    # GPU hist is a different algorithm than CPU hist; the thesis numbers are
+    # locked to CPU. Override with XGB_DEVICE=cuda only for speed experiments.
+    device = os.environ.get("XGB_DEVICE", "cpu")
     model = xgb.XGBClassifier(
         n_estimators=3000,
         learning_rate=0.05,
@@ -108,7 +113,7 @@ def run_xgboost(X_tr, y_tr, X_va, y_va, X_te, seed) -> np.ndarray:
         eval_metric="aucpr",
         early_stopping_rounds=200,
         random_state=seed,
-        device=DEVICE,
+        device=device,
     )
     model.fit(X_tr, y_tr, eval_set=[(X_va, y_va)], verbose=False)
     return model.predict_proba(X_te)[:, 1]
