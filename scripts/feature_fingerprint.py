@@ -1,4 +1,4 @@
-"""Feature-matrix fingerprint for cross-machine consistency debugging."""
+"""Per-column fingerprints to localize cross-machine feature divergence."""
 
 import hashlib
 import sys
@@ -21,10 +21,7 @@ X = attach_features(df)
 src_gid, dst_gid, _ = build_global_account_index(df)
 X = X.join(extract_profile_columns(df, src_gid, dst_gid))
 
-arr = np.ascontiguousarray(X.to_numpy(dtype=np.float64))
-print("shape:", arr.shape)
-print("md5:", hashlib.md5(arr).hexdigest())
-print("sum:", repr(float(arr.sum())))
-print("nan_count:", int(np.isnan(arr).sum()))
-for i in (0, 1, 2, arr.shape[0] // 2, arr.shape[0] - 1):
-    print(f"row{i} md5:", hashlib.md5(arr[i].tobytes()).hexdigest())
+arr = X.to_numpy(dtype=np.float64)
+for j, col in enumerate(X.columns):
+    col_arr = np.ascontiguousarray(arr[:, j])
+    print(f"{col}\t{hashlib.md5(col_arr.tobytes()).hexdigest()[:10]}\t{col_arr.sum():.6e}")
