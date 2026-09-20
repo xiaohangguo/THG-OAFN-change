@@ -1,4 +1,4 @@
-"""Strictly causal account-history features for transaction risk scoring.
+﻿"""Strictly causal account-history features for transaction risk scoring.
 
 Visibility rule: a transaction at time t only sees history with
 timestamp < t on the same account. Concurrent transactions (equal timestamps)
@@ -56,7 +56,7 @@ def causal_account_features(
     prefix: str,
 ) -> pd.DataFrame:
     """Build causal window features for one account role (sent or received)."""
-    ts_ns = pd.to_datetime(df[timestamp_col]).astype("int64").to_numpy()
+    ts_ns = pd.to_datetime(df[timestamp_col]).astype("datetime64[ns]").astype("int64").to_numpy()
     usd = df[usd_amount_col].to_numpy(dtype="float64")
 
     order = np.lexsort((ts_ns, df[account_col].to_numpy()))
@@ -114,9 +114,9 @@ def causal_pair_features(
     destination_account_col: str,
     usd_amount_col: str,
 ) -> pd.DataFrame:
-    """Strictly-causal account-pair features: past interaction strength between the specific source→destination pair."""
+    """Strictly-causal account-pair features: past interaction strength between the specific source鈫抎estination pair."""
 
-    ts_ns = pd.to_datetime(df[timestamp_col]).astype("int64").to_numpy()
+    ts_ns = pd.to_datetime(df[timestamp_col]).astype("datetime64[ns]").astype("int64").to_numpy()
     src = df[source_account_col].astype(str).to_numpy()
     dst = df[destination_account_col].astype(str).to_numpy()
     usd = df[usd_amount_col].to_numpy(dtype="float64")

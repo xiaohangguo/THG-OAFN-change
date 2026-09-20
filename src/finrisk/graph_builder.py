@@ -150,7 +150,7 @@ def build_banded_snapshots(
     n_accounts = int(max(src_gid.max(), dst_gid.max())) + 1
 
     # Precompute per-row arrays once; the band loop must only slice them.
-    ts_ns = ts.astype("int64").to_numpy()
+    ts_ns = ts.astype("datetime64[ns]").astype("int64").to_numpy()
     usd_arr = df["usd_amount"].to_numpy()
     hour_arr = (ts.dt.hour.to_numpy().astype(np.float32) / 24.0)
     bank_arr = pd.concat([df["src_bank"].astype(str), df["dst_bank"].astype(str)], axis=1).to_numpy()
