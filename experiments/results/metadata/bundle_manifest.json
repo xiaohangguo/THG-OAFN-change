@@ -1,0 +1,79 @@
+{
+  "zip_path": "/root/autodl-tmp/bundle.zip",
+  "zip_bytes": 8176169418,
+  "listed_utc": "2026-09-20T12:44:49.072665+00:00",
+  "members": [
+    {
+      "name": "HI-Large_Patterns.txt",
+      "bytes": 13807473
+    },
+    {
+      "name": "HI-Large_Trans.csv",
+      "bytes": 17052760651
+    },
+    {
+      "name": "HI-Large_accounts.csv",
+      "bytes": 147691860
+    },
+    {
+      "name": "HI-Medium_Patterns.txt",
+      "bytes": 2279574
+    },
+    {
+      "name": "HI-Medium_Trans.csv",
+      "bytes": 3031783420
+    },
+    {
+      "name": "HI-Medium_accounts.csv",
+      "bytes": 145008642
+    },
+    {
+      "name": "HI-Small_Patterns.txt",
+      "bytes": 323844
+    },
+    {
+      "name": "HI-Small_Trans.csv",
+      "bytes": 475664283
+    },
+    {
+      "name": "HI-Small_accounts.csv",
+      "bytes": 34053187
+    },
+    {
+      "name": "LI-Large_Patterns.txt",
+      "bytes": 1934790
+    },
+    {
+      "name": "LI-Large_Trans.csv",
+      "bytes": 16742513790
+    },
+    {
+      "name": "LI-Large_accounts.csv",
+      "bytes": 144349585
+    },
+    {
+      "name": "LI-Medium_Patterns.txt",
+      "bytes": 390893
+    },
+    {
+      "name": "LI-Medium_Trans.csv",
+      "bytes": 2976436978
+    },
+    {
+      "name": "LI-Medium_accounts.csv",
+      "bytes": 141781157
+    },
+    {
+      "name": "LI-Small_Patterns.txt",
+      "bytes": 99156
+    },
+    {
+      "name": "LI-Small_Trans.csv",
+      "bytes": 650422357
+    },
+    {
+      "name": "LI-Small_accounts.csv",
+      "bytes": 47248016
+    }
+  ]
+}

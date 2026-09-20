@@ -1,0 +1,40 @@
+{
+  "audit_version": "phase1-v1",
+  "created_utc": "2026-09-20T12:45:25.615724+00:00",
+  "transactions": {
+    "path": "/root/autodl-tmp/data_cache/ibm_aml/HI-Small_Trans.csv",
+    "size_bytes": 475664283,
+    "modified_utc": "2026-09-20T12:44:50.617909+00:00",
+    "column_mapping": {
+      "timestamp": "Timestamp",
+      "source_bank": "From Bank",
+      "source_account": "Account",
+      "destination_bank": "To Bank",
+      "destination_account": "Account.1",
+      "label": "Is Laundering"
+    },
+    "rows": 5078345,
+    "positive_rows": 5177,
+    "positive_rate": 0.0010194266045335635,
+    "timestamp_min": "2022-09-01T00:00:00",
+    "timestamp_max": "2022-09-18T16:18:00",
+    "unique_accounts": 515080,
+    "unique_banks": 30470,
+    "payment_formats": [
+      "ACH",
+      "Bitcoin",
+      "Cash",
+      "Cheque",
+      "Credit Card",
+      "Reinvestment",
+      "Wire"
+    ]
+  },
+  "accounts": {
+    "path": "/root/autodl-tmp/data_cache/ibm_aml/HI-Small_accounts.csv",
+    "size_bytes": 34053187,
+    "modified_utc": "2026-09-20T12:44:50.761909+00:00"
+  },
+  "temporal_readiness": "pass",
+  "next_gate": "Phase 2 may begin only after this audit and raw-data licence record are reviewed."
+}

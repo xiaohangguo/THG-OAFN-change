@@ -1,0 +1,2028 @@
+{
+  "run_id": "20260920T152804Z",
+  "model": "xgboost",
+  "seed": 42,
+  "n_features": 78,
+  "global_ranking_top20": [
+    {
+      "feature": "pair_w7d_count",
+      "mean_abs_shap": 1.293351650238037
+    },
+    {
+      "feature": "payment_format",
+      "mean_abs_shap": 1.2746002674102783
+    },
+    {
+      "feature": "src_w1h_count",
+      "mean_abs_shap": 0.6290850639343262
+    },
+    {
+      "feature": "src_w24h_count",
+      "mean_abs_shap": 0.3881770372390747
+    },
+    {
+      "feature": "src_w7d_count",
+      "mean_abs_shap": 0.37351006269454956
+    },
+    {
+      "feature": "amount_paid",
+      "mean_abs_shap": 0.36276116967201233
+    },
+    {
+      "feature": "pair_w1h_count",
+      "mean_abs_shap": 0.3502729535102844
+    },
+    {
+      "feature": "pair_past_count",
+      "mean_abs_shap": 0.32855024933815
+    },
+    {
+      "feature": "dst_bro_w7d_count",
+      "mean_abs_shap": 0.20775236189365387
+    },
+    {
+      "feature": "src_bro_w7d_count",
+      "mean_abs_shap": 0.1841239184141159
+    },
+    {
+      "feature": "dow",
+      "mean_abs_shap": 0.17910125851631165
+    },
+    {
+      "feature": "prof_src_7",
+      "mean_abs_shap": 0.1755647361278534
+    },
+    {
+      "feature": "prof_src_4",
+      "mean_abs_shap": 0.1492268294095993
+    },
+    {
+      "feature": "dst_w7d_count",
+      "mean_abs_shap": 0.14475716650485992
+    },
+    {
+      "feature": "prof_src_0",
+      "mean_abs_shap": 0.10691164433956146
+    },
+    {
+      "feature": "hour",
+      "mean_abs_shap": 0.09778446704149246
+    },
+    {
+      "feature": "prof_dst_7",
+      "mean_abs_shap": 0.08663495630025864
+    },
+    {
+      "feature": "payment_currency",
+      "mean_abs_shap": 0.08427444100379944
+    },
+    {
+      "feature": "prof_dst_0",
+      "mean_abs_shap": 0.08334880322217941
+    },
+    {
+      "feature": "src_past_count",
+      "mean_abs_shap": 0.08301926404237747
+    }
+  ],
+  "fidelity": {
+    "masked_features": [
+      "pair_w7d_count",
+      "payment_format",
+      "src_w1h_count",
+      "src_w24h_count",
+      "src_w7d_count",
+      "amount_paid",
+      "pair_w1h_count",
+      "pair_past_count",
+      "dst_bro_w7d_count",
+      "src_bro_w7d_count"
+    ],
+    "flagged_score_before": 0.9227467179298401,
+    "flagged_score_after": 0.27022138237953186,
+    "score_drop_ratio": 0.7071554064750671,
+    "mean_abs_shap_share_of_top_k": 0.6484942400337841
+  },
+  "cases": [
+    {
+      "kind": "true_positive",
+      "row": 818,
+      "score": 0.9997326731681824,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.8378922939300537,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.6415177583694458,
+          "value": 9.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.2576333284378052,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.8479527831077576,
+          "value": 20182.57
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.47190001606941223,
+          "value": 11.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.4156883955001831,
+          "value": 29.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.41067028045654297,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.40130966901779175,
+          "value": 7362.298181818163
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 798,
+      "score": 0.9997016787528992,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.8605620861053467,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.4062554836273193,
+          "value": 6.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.3238794803619385,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.8227832317352295,
+          "value": 15291.64
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.553783655166626,
+          "value": 12.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.4407186210155487,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.40246960520744324,
+          "value": 22.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.4019492268562317,
+          "value": 6.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 145,
+      "score": 0.9995957016944885,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.8683838844299316,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.3199518918991089,
+          "value": 6.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.1417778730392456,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.8988141417503357,
+          "value": 12104.04
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.463460773229599,
+          "value": 29.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.4371906816959381,
+          "value": 10.0
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.40929508209228516,
+          "value": 10.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.40221497416496277,
+          "value": 5.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 65088,
+      "score": 0.9995274543762207,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.8094944953918457,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.5108087062835693,
+          "value": 7.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.2104589939117432,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.9178805351257324,
+          "value": 18048.55
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.6306508779525757,
+          "value": 19.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.4727803170681,
+          "value": 8857.322
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.36584287881851196,
+          "value": 0.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.35036158561706543,
+          "value": 6.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 233,
+      "score": 0.9994878768920898,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.859025716781616,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.6296653747558594,
+          "value": 6.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.1617757081985474,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.8041337132453918,
+          "value": 21.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.793944239616394,
+          "value": 17049.76
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3922368884086609,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_6",
+          "shap": 0.37327146530151367,
+          "value": 358352.5625
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.37043654918670654,
+          "value": 4.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 814,
+      "score": 0.9991928935050964,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.636300563812256,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.6548749208450317,
+          "value": 9.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.2262840270996094,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.518920361995697,
+          "value": 12.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.4058142304420471,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.3941933512687683,
+          "value": 28.0
+        },
+        {
+          "feature": "src_w7d_sum",
+          "shap": 0.39240333437919617,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.3768151104450226,
+          "value": 6579.962142857157
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 899431,
+      "score": 0.9990563988685608,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.636705160140991,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.269840955734253,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.1586724519729614,
+          "value": 6.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.6893680095672607,
+          "value": 18.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.5593321919441223,
+          "value": 8381.7
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.4347532093524933,
+          "value": 18060.25
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.41791966557502747,
+          "value": 0.0
+        },
+        {
+          "feature": "src_w7d_sum",
+          "shap": 0.39598917961120605,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 237,
+      "score": 0.9990500807762146,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.681925058364868,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.5784896612167358,
+          "value": 6.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.0881818532943726,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.9306322932243347,
+          "value": 10586.64
+        },
+        {
+          "feature": "dst_w7d_mean",
+          "shap": 0.4517265260219574,
+          "value": 378954.7794444444
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.38261663913726807,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w7d_sum",
+          "shap": 0.3573518991470337,
+          "value": 6821186.029999999
+        },
+        {
+          "feature": "prof_dst_6",
+          "shap": 0.32818540930747986,
+          "value": 358352.5625
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 211,
+      "score": 0.9990469813346863,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.7111425399780273,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.8388172388076782,
+          "value": 10.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.2012205123901367,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.5023928880691528,
+          "value": 5462.9
+        },
+        {
+          "feature": "dow",
+          "shap": 0.4738142192363739,
+          "value": 5.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.39562565088272095,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.3413824141025543,
+          "value": 33.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.3113718032836914,
+          "value": 34.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 447404,
+      "score": 0.999031662940979,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.658393383026123,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.5934851169586182,
+          "value": 10.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.3192967176437378,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.8188824653625488,
+          "value": 18755.94
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.5713983774185181,
+          "value": 15.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.38285624980926514,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.31466543674468994,
+          "value": 4127.590000000001
+        },
+        {
+          "feature": "src_w7d_sum",
+          "shap": 0.29685547947883606,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 919639,
+      "score": 0.9987515211105347,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.5781469345092773,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.547582983970642,
+          "value": 9.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.2660139799118042,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.7862402200698853,
+          "value": 15108.13
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.587478518486023,
+          "value": 12.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.47069865465164185,
+          "value": 9794.659999999996
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3640861213207245,
+          "value": 0.0
+        },
+        {
+          "feature": "src_w7d_sum",
+          "shap": 0.3173399269580841,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 487267,
+      "score": 0.9987313151359558,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.6080360412597656,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.6830289363861084,
+          "value": 9.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.1450767517089844,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.6244558691978455,
+          "value": 6726.34
+        },
+        {
+          "feature": "dow",
+          "shap": 0.4034847915172577,
+          "value": 6.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.39795371890068054,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.37468621134757996,
+          "value": 16799.65000000001
+        },
+        {
+          "feature": "src_w7d_sum",
+          "shap": 0.35021233558654785,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 65096,
+      "score": 0.9986525774002075,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.5261142253875732,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.952392816543579,
+          "value": 15.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.1001536846160889,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.9701011180877686,
+          "value": 18515.37
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.4520209729671478,
+          "value": 10038.022500000003
+        },
+        {
+          "feature": "src_bro_w7d_count",
+          "shap": -0.3574941158294678,
+          "value": 3427.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.35357433557510376,
+          "value": 0.0
+        },
+        {
+          "feature": "src_w7d_sum",
+          "shap": 0.3197530210018158,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 65081,
+      "score": 0.9986170530319214,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.6587860584259033,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.165754795074463,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 0.8047788143157959,
+          "value": 5.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.6614820957183838,
+          "value": 21.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.6095545291900635,
+          "value": 6889.99
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.5416697263717651,
+          "value": 9508.2
+        },
+        {
+          "feature": "dow",
+          "shap": 0.5384801626205444,
+          "value": 5.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.37533533573150635,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 241,
+      "score": 0.9986168146133423,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.648643970489502,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.7807672023773193,
+          "value": 10.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.0321818590164185,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.9126026034355164,
+          "value": 16280.79
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.434876024723053,
+          "value": 5.0
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.37542542815208435,
+          "value": 22.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3667936623096466,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.32166317105293274,
+          "value": 23.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 487263,
+      "score": 0.9986151456832886,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.623802900314331,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.562125563621521,
+          "value": 7.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.2668038606643677,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.540004551410675,
+          "value": 11.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.437572181224823,
+          "value": 12354.016666666668
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.42240023612976074,
+          "value": 0.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.38242626190185547,
+          "value": 5.0
+        },
+        {
+          "feature": "src_w7d_sum",
+          "shap": 0.3542530834674835,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 687804,
+      "score": 0.9985477328300476,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.5645532608032227,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.7646015882492065,
+          "value": 6.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.183049201965332,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.849617063999176,
+          "value": 10394.61
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.5070598125457764,
+          "value": 24.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.4218400716781616,
+          "value": 9391.223333333333
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.4031464755535126,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.3661562502384186,
+          "value": 24.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 727309,
+      "score": 0.9985073208808899,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.397069215774536,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.726578950881958,
+          "value": 13.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.1423062086105347,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.819338858127594,
+          "value": 18998.42
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.4253326654434204,
+          "value": 10356.552500000005
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3488348424434662,
+          "value": 0.0
+        },
+        {
+          "feature": "src_w7d_sum",
+          "shap": 0.31358835101127625,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w7d_mean",
+          "shap": 0.22631600499153137,
+          "value": 9023.61642857143
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 660999,
+      "score": 0.9982325434684753,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.8378567695617676,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 2.0561342239379883,
+          "value": 12.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.0176154375076294,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.7168000340461731,
+          "value": 23.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.645637571811676,
+          "value": 9393.09
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.3545033037662506,
+          "value": 5.0
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.3406299352645874,
+          "value": 14.0
+        },
+        {
+          "feature": "payment_currency",
+          "shap": 0.32348114252090454,
+          "value": 8.0
+        }
+      ]
+    },
+    {
+      "kind": "true_positive",
+      "row": 242,
+      "score": 0.998224675655365,
+      "label": 1,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.858342170715332,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.7077937126159668,
+          "value": 10.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.2782118320465088,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.9191346168518066,
+          "value": 16530.28
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.7398926615715027,
+          "value": 25.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.548856794834137,
+          "value": 5.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.5019055008888245,
+          "value": 24.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.4071066677570343,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 660998,
+      "score": 0.9985679388046265,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.763704776763916,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 2.0481314659118652,
+          "value": 12.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.0013926029205322,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.7434230446815491,
+          "value": 23.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.4912337064743042,
+          "value": 46588.44
+        },
+        {
+          "feature": "payment_currency",
+          "shap": 0.37662649154663086,
+          "value": 8.0
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.3749321699142456,
+          "value": 5.0
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.3561854958534241,
+          "value": 14.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 206685,
+      "score": 0.9976125955581665,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.6494505405426025,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.6986768245697021,
+          "value": 7.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.9208389520645142,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.7334347367286682,
+          "value": 21.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.6571415066719055,
+          "value": 11499.82
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.505208432674408,
+          "value": 31.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.4443577527999878,
+          "value": 28.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.43943479657173157,
+          "value": 6.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 304,
+      "score": 0.9926983714103699,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.2929399013519287,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.3525689840316772,
+          "value": 5.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.9987766742706299,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_0",
+          "shap": 0.45729437470436096,
+          "value": 25.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.3840545117855072,
+          "value": 287826.54
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.35806363821029663,
+          "value": 30.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3388463258743286,
+          "value": 0.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.2777492105960846,
+          "value": 5.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 971228,
+      "score": 0.9863781929016113,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.6241021156311035,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.747512936592102,
+          "value": 7.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.136873483657837,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.46032363176345825,
+          "value": 19.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.4027988910675049,
+          "value": 24.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3650989830493927,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.3184376657009125,
+          "value": 21.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": -0.3089352250099182,
+          "value": 2734.33
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 75,
+      "score": 0.9805682301521301,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.174992561340332,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.7689478397369385,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.568747878074646,
+          "value": 11.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.5183355808258057,
+          "value": 11.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.4975968897342682,
+          "value": 27.0
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.44645559787750244,
+          "value": 27.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 0.42313048243522644,
+          "value": 3.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.41194966435432434,
+          "value": 452118.86499999976
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 955522,
+      "score": 0.9801554083824158,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.430939197540283,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.1983870267868042,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.6998501420021057,
+          "value": 16.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.5424913763999939,
+          "value": 5.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.40212467312812805,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_6",
+          "shap": 0.3646933436393738,
+          "value": 20332.98828125
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 0.2959795594215393,
+          "value": 3.0
+        },
+        {
+          "feature": "dst_bro_w7d_count",
+          "shap": -0.25631389021873474,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 850456,
+      "score": 0.978865921497345,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.510033369064331,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.9962658286094666,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.8929951190948486,
+          "value": 19.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.8146997690200806,
+          "value": 13553.79
+        },
+        {
+          "feature": "dow",
+          "shap": 0.5297301411628723,
+          "value": 5.0
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.4865565001964569,
+          "value": 5.0
+        },
+        {
+          "feature": "same_bank",
+          "shap": -0.4821748733520508,
+          "value": 1.0
+        },
+        {
+          "feature": "dst_bro_w7d_count",
+          "shap": 0.40509772300720215,
+          "value": 15.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 800,
+      "score": 0.9768415093421936,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.3603227138519287,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.759333610534668,
+          "value": 6.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.010435938835144,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.44984546303749084,
+          "value": 23.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.38688212633132935,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_1",
+          "shap": -0.27147385478019714,
+          "value": 16.75909996032715
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.26262611150741577,
+          "value": 21.0
+        },
+        {
+          "feature": "dst_w24h_mean",
+          "shap": 0.25126442313194275,
+          "value": 8952.40888888896
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 971252,
+      "score": 0.9762207269668579,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.3327314853668213,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.8369231224060059,
+          "value": 14.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.0212005376815796,
+          "value": 0.0
+        },
+        {
+          "feature": "src_bro_w7d_count",
+          "shap": 0.5177909135818481,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.41198480129241943,
+          "value": 28.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.32907989621162415,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": -0.300082266330719,
+          "value": 2507.21
+        },
+        {
+          "feature": "dow",
+          "shap": 0.19931910932064056,
+          "value": 2.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 829903,
+      "score": 0.9749405384063721,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.2935118675231934,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.9720671772956848,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.7960114479064941,
+          "value": 14.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.43489983677864075,
+          "value": 5.0
+        },
+        {
+          "feature": "dst_bro_w7d_count",
+          "shap": 0.398171603679657,
+          "value": 21.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3304390609264374,
+          "value": 0.0
+        },
+        {
+          "feature": "src_bro_w7d_count",
+          "shap": 0.30961522459983826,
+          "value": 0.0
+        },
+        {
+          "feature": "src_w24h_std",
+          "shap": 0.30318334698677063,
+          "value": 2760373.1737563275
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 447427,
+      "score": 0.9729534387588501,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.423424005508423,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.9349037408828735,
+          "value": 17680.82
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.9180751442909241,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.8731605410575867,
+          "value": 23.0
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.5910926461219788,
+          "value": 14.0
+        },
+        {
+          "feature": "dst_bro_w7d_count",
+          "shap": -0.5307532548904419,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_3",
+          "shap": 0.4528762996196747,
+          "value": 11.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.39227133989334106,
+          "value": 2.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 661011,
+      "score": 0.9672874808311462,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.6367228031158447,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.0016449689865112,
+          "value": 5.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.8485988974571228,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.7446995973587036,
+          "value": 21.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.3710825741291046,
+          "value": 6.0
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.318301260471344,
+          "value": 4.0
+        },
+        {
+          "feature": "payment_currency",
+          "shap": 0.3080938756465912,
+          "value": 8.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.27675122022628784,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 491,
+      "score": 0.9633358120918274,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.045614719390869,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.9261541366577148,
+          "value": 12.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.9028488397598267,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": -0.6914428472518921,
+          "value": 612.21
+        },
+        {
+          "feature": "src_bro_w7d_count",
+          "shap": -0.47534871101379395,
+          "value": 67.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.32701221108436584,
+          "value": 6.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3186260759830475,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w7d_mean",
+          "shap": 0.2979834973812103,
+          "value": 9682.815
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 487,
+      "score": 0.9632843732833862,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.1121792793273926,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 2.008941650390625,
+          "value": 10.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.0102473497390747,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3452538847923279,
+          "value": 0.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.31906694173812866,
+          "value": 5.0
+        },
+        {
+          "feature": "dst_bro_w7d_count",
+          "shap": 0.2704084813594818,
+          "value": 19.0
+        },
+        {
+          "feature": "src_w7d_count",
+          "shap": -0.2702333629131317,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_w1h_count",
+          "shap": 0.24240882694721222,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 845976,
+      "score": 0.9493958353996277,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.0626778602600098,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.5958460569381714,
+          "value": 7.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.0187171697616577,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.36520299315452576,
+          "value": 0.0
+        },
+        {
+          "feature": "src_bro_w7d_count",
+          "shap": 0.3433752655982971,
+          "value": 0.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.2538084089756012,
+          "value": 1.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.23703642189502716,
+          "value": 49459.7
+        },
+        {
+          "feature": "dst_w1h_count",
+          "shap": 0.13172079622745514,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 829522,
+      "score": 0.9472348690032959,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.240408182144165,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.6298071146011353,
+          "value": 7.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.8132603168487549,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.34148696064949036,
+          "value": 10292.5
+        },
+        {
+          "feature": "dow",
+          "shap": 0.3266642391681671,
+          "value": 5.0
+        },
+        {
+          "feature": "dst_w7d_count",
+          "shap": 0.29674217104911804,
+          "value": 22.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.2752583920955658,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.2560540735721588,
+          "value": 4.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 25,
+      "score": 0.944235622882843,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.435683488845825,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.0226341485977173,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.846631646156311,
+          "value": 19.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.5491303205490112,
+          "value": 5.0
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.534015953540802,
+          "value": 14.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.37417498230934143,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_3",
+          "shap": 0.3684307038784027,
+          "value": 10.0
+        },
+        {
+          "feature": "dst_bro_w24h_sum",
+          "shap": -0.33359694480895996,
+          "value": 151.46999999997206
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 466702,
+      "score": 0.9419469833374023,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.335672378540039,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.9456630349159241,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 0.8181170225143433,
+          "value": 4.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.7630555033683777,
+          "value": 13988.55
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.6403246521949768,
+          "value": 34.0
+        },
+        {
+          "feature": "prof_dst_4",
+          "shap": 0.5751838088035583,
+          "value": 45.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3402273952960968,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_0",
+          "shap": 0.31626924872398376,
+          "value": 50.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 915212,
+      "score": 0.9370666742324829,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.4970626831054688,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_dst_7",
+          "shap": 1.3464956283569336,
+          "value": 8.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 1.0252262353897095,
+          "value": 0.0
+        },
+        {
+          "feature": "dow",
+          "shap": 0.3562569320201874,
+          "value": 5.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.32690584659576416,
+          "value": 0.0
+        },
+        {
+          "feature": "src_bro_w7d_count",
+          "shap": 0.30296945571899414,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_7",
+          "shap": 0.22483046352863312,
+          "value": 6.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.19153039157390594,
+          "value": 10.0
+        }
+      ]
+    },
+    {
+      "kind": "false_positive",
+      "row": 857077,
+      "score": 0.9363142848014832,
+      "label": 0,
+      "top_contributors": [
+        {
+          "feature": "payment_format",
+          "shap": 3.236947774887085,
+          "value": 0.0
+        },
+        {
+          "feature": "pair_w7d_count",
+          "shap": 0.9580498337745667,
+          "value": 0.0
+        },
+        {
+          "feature": "prof_src_4",
+          "shap": 0.6509451270103455,
+          "value": 14.0
+        },
+        {
+          "feature": "src_bro_w7d_count",
+          "shap": 0.48663073778152466,
+          "value": 0.0
+        },
+        {
+          "feature": "amount_paid",
+          "shap": 0.40811821818351746,
+          "value": 20688.46
+        },
+        {
+          "feature": "dow",
+          "shap": 0.4042511284351349,
+          "value": 5.0
+        },
+        {
+          "feature": "pair_past_count",
+          "shap": 0.3264389932155609,
+          "value": 0.0
+        },
+        {
+          "feature": "dst_bro_w7d_count",
+          "shap": 0.2599729001522064,
+          "value": 318.0
+        }
+      ]
+    }
+  ]
+}
