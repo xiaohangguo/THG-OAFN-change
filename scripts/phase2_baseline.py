@@ -32,6 +32,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from finrisk.causal_features import build_causal_features, causal_entity_features
 from finrisk.data_contract import laundering_mask, resolve_transaction_columns
+from finrisk.entity_join import attach_entities
 from finrisk.temporal_split import assert_split_properties, temporal_split
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -80,26 +81,6 @@ def attach_features(df: pd.DataFrame) -> pd.DataFrame:
                                         "src_entity", "dst_entity", "usd_amount")
         out = pd.concat([out, entity], axis=1)
     return out
-
-
-def attach_entities(df: pd.DataFrame, accounts_path: Path) -> pd.DataFrame:
-    """Attach per-transaction source/destination Entity IDs from the accounts CSV.
-
-    Account numbers are normalized (strip + drop leading zeros) on both sides so
-    the join is exact; a missing mapping yields an empty entity (isolated node).
-    """
-    import numpy as np
-    acc = pd.read_csv(accounts_path, usecols=["Account Number", "Entity ID"])
-    acc["acc"] = acc["Account Number"].astype(str).str.strip().str.lstrip("0").replace("", "0")
-    mapping = dict(zip(acc["acc"], acc["Entity ID"]))
-
-    def norm_series(s: pd.Series) -> pd.Series:
-        return s.astype(str).str.strip().str.lstrip("0").replace("", "0")
-
-    df = df.copy()
-    df["src_entity"] = norm_series(df["src_account"]).map(mapping).fillna("").astype(str)
-    df["dst_entity"] = norm_series(df["dst_account"]).map(mapping).fillna("").astype(str)
-    return df
 
 
 def recall_at_k(y_true: np.ndarray, score: np.ndarray, fraction: float) -> float:
