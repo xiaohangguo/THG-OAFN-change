@@ -87,9 +87,19 @@ def main() -> int:
     print(f"champion test AUPRC={average_precision_score(y[te], score[te]):.4f}", flush=True)
 
     # ---- Surrogate distillation (train+val rows only) ------------------------
+    # Distill in LOGIT space with head-weighted samples: raw probability MSE
+    # collapses to near-zero predictions under imbalance and destroys ranking.
     fit_mask = masks["train"] | masks["validation"]
+    s_fit_np = score[fit_mask]
+    eps = 1e-4
+    logits_fit_np = np.log(np.clip(s_fit_np, eps, 1 - eps) / np.clip(1 - s_fit_np, eps, 1 - eps))
+    # Weight: top 0.5% by score get 30x, next 2% get 5x, rest 1x.
+    ranks = s_fit_np.argsort().argsort() / max(len(s_fit_np) - 1, 1)
+    weights_np = np.where(ranks >= 0.995, 30.0, np.where(ranks >= 0.98, 5.0, 1.0)).astype(np.float32)
+
     x_fit = torch.from_numpy(Xn[fit_mask].astype(np.float32)).to(DEVICE)
-    s_fit = torch.from_numpy(score[fit_mask].astype(np.float32)).to(DEVICE)
+    l_fit = torch.from_numpy(logits_fit_np.astype(np.float32)).to(DEVICE)
+    w_fit = torch.from_numpy(weights_np).to(DEVICE)
     x_te = torch.from_numpy(Xn[te].astype(np.float32)).to(DEVICE)
 
     torch.manual_seed(args.seed)
@@ -102,12 +112,14 @@ def main() -> int:
         perm = torch.randperm(n, device=DEVICE)
         for i in range(0, n, 262144):
             idx = perm[i : i + 262144]
-            loss = nn.functional.mse_loss(sur(x_fit[idx]), s_fit[idx])
+            err = (sur(x_fit[idx]) - l_fit[idx]) ** 2
+            loss = (err * w_fit[idx]).mean()
             opt.zero_grad(); loss.backward(); opt.step()
         sched.step()
     sur.eval()
     with torch.no_grad():
-        s_hat_te = sur(x_te).cpu().numpy()
+        l_hat_te = sur(x_te).cpu().numpy()
+    s_hat_te = 1.0 / (1.0 + np.exp(-l_hat_te))
     rho = spearmanr(score[te], s_hat_te).statistic
     k = max(1, int(len(s_hat_te) * 0.001))
     top_true = set(np.argsort(-score[te])[:k].tolist())
@@ -141,7 +153,8 @@ def main() -> int:
             for _, c, j in top_drivers:
                 row2[j] = row[j] * scale
             with torch.no_grad():
-                pred_sur = float(sur(torch.from_numpy(row2.astype(np.float32)).to(DEVICE)).item())
+                logit2 = float(sur(torch.from_numpy(row2.astype(np.float32)).to(DEVICE)).item())
+                pred_sur = 1.0 / (1.0 + np.exp(-logit2))
             pred_true = float(model.predict_proba(pd.DataFrame([row2], columns=feature_cols))[0, 1])
             fidelity_pairs.append((pred_sur, pred_true))
             case["waterfall"].append({

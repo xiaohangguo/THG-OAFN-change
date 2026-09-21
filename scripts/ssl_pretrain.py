@@ -70,6 +70,14 @@ def main() -> int:
     ssl_bands = [b for b in bands if b.rows.max() < test_start_row]
     print(f"SSL bands: {len(ssl_bands)} of {len(bands)} (pre-test only)", flush=True)
 
+    # Standardize node features over SSL bands (raw profile scales explode
+    # GATv2 forward into NaN otherwise). Same stats applied to ALL bands.
+    ssl_x = torch.cat([b.x for b in ssl_bands if b.edge_index.shape[1] > 0], dim=0)
+    feat_mean = ssl_x.mean(dim=0, keepdim=True)
+    feat_std = ssl_x.std(dim=0, keepdim=True).clamp(min=1e-6)
+    for b in bands:
+        b.x = (b.x - feat_mean) / feat_std
+
     # ---- Self-supervised pretraining: masked profile reconstruction --------
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
