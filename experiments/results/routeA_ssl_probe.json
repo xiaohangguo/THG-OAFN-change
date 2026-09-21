@@ -1,0 +1,11 @@
+{
+  "xgb78": 0.6276399549241122,
+  "xgb78_plus_ssl": 0.5875657089947826,
+  "ssl_delta": -0.04007424592932962,
+  "verdict": "SSL embeddings hurt",
+  "ssl_config": {
+    "epochs": 50,
+    "mask_ratio": 0.3,
+    "conv": "gatv2"
+  }
+}
