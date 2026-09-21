@@ -1,0 +1,1430 @@
+{
+  "run_id": "2026-09-21T05:49:48.814589+00:00",
+  "group_interventions_summary": {
+    "pair_frequency": {
+      "mean_drop": 0.9265551313990728,
+      "max_drop": 0.9931891304440796,
+      "n": 20
+    },
+    "burst_activity": {
+      "mean_drop": -6.560981273651123e-05,
+      "max_drop": 0.0003269314765930176,
+      "n": 20
+    },
+    "daily_volume": {
+      "mean_drop": 0.0014995664358139038,
+      "max_drop": 0.0048836469650268555,
+      "n": 20
+    },
+    "weekly_volume": {
+      "mean_drop": 0.0026769280433654786,
+      "max_drop": 0.008114516735076904,
+      "n": 20
+    },
+    "entity_diff": {
+      "mean_drop": 0.8792683055624366,
+      "max_drop": 0.9644500948488712,
+      "n": 20
+    },
+    "src_profile": {
+      "mean_drop": 0.0007199913263320923,
+      "max_drop": 0.006739258766174316,
+      "n": 20
+    },
+    "dst_profile": {
+      "mean_drop": 0.05728789865970611,
+      "max_drop": 0.1724587082862854,
+      "n": 20
+    },
+    "amount": {
+      "mean_drop": 0.009544691443443299,
+      "max_drop": 0.025857269763946533,
+      "n": 20
+    }
+  },
+  "accuracy_attributability_frontier": [
+    {
+      "n_features": 78,
+      "test_auprc": 0.6176111693433414,
+      "pair_group_mean_drop": 0.8919383347965777
+    },
+    {
+      "n_features": 30,
+      "test_auprc": 0.5373239432524889,
+      "pair_group_mean_drop": 0.9681472867931007
+    },
+    {
+      "n_features": 15,
+      "test_auprc": 0.38113451527433984,
+      "pair_group_mean_drop": 0.8565486054372741
+    },
+    {
+      "n_features": 8,
+      "test_auprc": 0.23382887973968158,
+      "pair_group_mean_drop": 0.5700440665706992
+    }
+  ],
+  "intervention": "test-population median replacement (return to ordinary behaviour)",
+  "cases": [
+    {
+      "row": 3863647,
+      "base_score": 0.9997590184211731,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.03490864485502243,
+          "drop": 0.9648503735661507
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9997676014900208,
+          "drop": -8.58306884765625e-06
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9994038343429565,
+          "drop": 0.00035518407821655273
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.999159574508667,
+          "drop": 0.0005994439125061035
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.24680761992931366,
+          "drop": 0.7529513984918594
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9997732043266296,
+          "drop": -1.4185905456542969e-05
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9882730841636658,
+          "drop": 0.011485934257507324
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9971823692321777,
+          "drop": 0.0025766491889953613
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.953472852706909
+        ],
+        [
+          "prof_dst_7",
+          1.4048824310302734
+        ],
+        [
+          "pair_w7d_count",
+          1.123665690422058
+        ],
+        [
+          "amount_paid",
+          0.8732745051383972
+        ],
+        [
+          "prof_src_4",
+          0.5808495879173279
+        ]
+      ]
+    },
+    {
+      "row": 3863667,
+      "base_score": 0.999536395072937,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.031072070822119713,
+          "drop": 0.9684643242508173
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9995527863502502,
+          "drop": -1.6391277313232422e-05
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9987494945526123,
+          "drop": 0.000786900520324707
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9987370371818542,
+          "drop": 0.0007993578910827637
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.1725221425294876,
+          "drop": 0.8270142525434494
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9995433688163757,
+          "drop": -6.973743438720703e-06
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9801138043403625,
+          "drop": 0.019422590732574463
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.996514618396759,
+          "drop": 0.0030217766761779785
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.891334295272827
+        ],
+        [
+          "prof_dst_7",
+          1.4748677015304565
+        ],
+        [
+          "pair_w7d_count",
+          1.083781123161316
+        ],
+        [
+          "amount_paid",
+          0.6478763222694397
+        ],
+        [
+          "prof_src_4",
+          0.5776048898696899
+        ]
+      ]
+    },
+    {
+      "row": 4127869,
+      "base_score": 0.9993280172348022,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.04874563217163086,
+          "drop": 0.9505823850631714
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9993380904197693,
+          "drop": -1.0073184967041016e-05
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9984764456748962,
+          "drop": 0.0008515715599060059
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9984285235404968,
+          "drop": 0.0008994936943054199
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.22261370718479156,
+          "drop": 0.7767143100500107
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.999285876750946,
+          "drop": 4.214048385620117e-05
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.985205352306366,
+          "drop": 0.01412266492843628
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9900001883506775,
+          "drop": 0.009327828884124756
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.883873462677002
+        ],
+        [
+          "prof_dst_7",
+          1.4404240846633911
+        ],
+        [
+          "pair_w7d_count",
+          1.0611693859100342
+        ],
+        [
+          "amount_paid",
+          0.8848628401756287
+        ],
+        [
+          "prof_src_4",
+          0.6319451332092285
+        ]
+      ]
+    },
+    {
+      "row": 2655561,
+      "base_score": 0.9991844296455383,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.06485150009393692,
+          "drop": 0.9343329295516014
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9992172718048096,
+          "drop": -3.2842159271240234e-05
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9992768168449402,
+          "drop": -9.238719940185547e-05
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9975658655166626,
+          "drop": 0.0016185641288757324
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.0782531201839447,
+          "drop": 0.9209313094615936
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9987118244171143,
+          "drop": 0.00047260522842407227
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9751161336898804,
+          "drop": 0.02406829595565796
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9916049242019653,
+          "drop": 0.007579505443572998
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.991241216659546
+        ],
+        [
+          "prof_dst_7",
+          1.1469534635543823
+        ],
+        [
+          "pair_w7d_count",
+          1.0148059129714966
+        ],
+        [
+          "amount_paid",
+          0.8665627837181091
+        ],
+        [
+          "pair_past_count",
+          0.4701232612133026
+        ]
+      ]
+    },
+    {
+      "row": 3035799,
+      "base_score": 0.999036431312561,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.08945434540510178,
+          "drop": 0.9095820859074593
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9990704655647278,
+          "drop": -3.403425216674805e-05
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9979144930839539,
+          "drop": 0.0011219382286071777
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9990481734275818,
+          "drop": -1.1742115020751953e-05
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.11072258651256561,
+          "drop": 0.8883138447999954
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9976673722267151,
+          "drop": 0.0013690590858459473
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9187873005867004,
+          "drop": 0.0802491307258606
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9930949807167053,
+          "drop": 0.005941450595855713
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.7526063919067383
+        ],
+        [
+          "prof_dst_7",
+          1.727477788925171
+        ],
+        [
+          "pair_w7d_count",
+          0.9500405788421631
+        ],
+        [
+          "amount_paid",
+          0.8083961009979248
+        ],
+        [
+          "pair_past_count",
+          0.45296165347099304
+        ]
+      ]
+    },
+    {
+      "row": 4750583,
+      "base_score": 0.9988663196563721,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.030685260891914368,
+          "drop": 0.9681810587644577
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9988897442817688,
+          "drop": -2.3424625396728516e-05
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9979402422904968,
+          "drop": 0.0009260773658752441
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9976423382759094,
+          "drop": 0.0012239813804626465
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.05913266912102699,
+          "drop": 0.9397336505353451
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9975972771644592,
+          "drop": 0.0012690424919128418
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9756572246551514,
+          "drop": 0.023209095001220703
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9903963804244995,
+          "drop": 0.008469939231872559
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.878896474838257
+        ],
+        [
+          "prof_dst_7",
+          1.386225938796997
+        ],
+        [
+          "pair_w7d_count",
+          1.0408772230148315
+        ],
+        [
+          "amount_paid",
+          0.8658992648124695
+        ],
+        [
+          "pair_past_count",
+          0.4699767827987671
+        ]
+      ]
+    },
+    {
+      "row": 4750585,
+      "base_score": 0.9988431930541992,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.021589089184999466,
+          "drop": 0.9772541038691998
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9994064569473267,
+          "drop": -0.0005632638931274414
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.996239423751831,
+          "drop": 0.002603769302368164
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.99456787109375,
+          "drop": 0.004275321960449219
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.10647518932819366,
+          "drop": 0.8923680037260056
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9991652965545654,
+          "drop": -0.00032210350036621094
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.858327329158783,
+          "drop": 0.14051586389541626
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9897583723068237,
+          "drop": 0.009084820747375488
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.6251912117004395
+        ],
+        [
+          "prof_dst_7",
+          1.9263240098953247
+        ],
+        [
+          "pair_w7d_count",
+          1.060152292251587
+        ],
+        [
+          "amount_paid",
+          0.8134050965309143
+        ],
+        [
+          "pair_past_count",
+          0.45161741971969604
+        ]
+      ]
+    },
+    {
+      "row": 3035791,
+      "base_score": 0.9988065958023071,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.038986727595329285,
+          "drop": 0.9598198682069778
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9984796643257141,
+          "drop": 0.0003269314765930176
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9960294961929321,
+          "drop": 0.002777099609375
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9966758489608765,
+          "drop": 0.002130746841430664
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.05053916200995445,
+          "drop": 0.9482674337923527
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9991645812988281,
+          "drop": -0.0003579854965209961
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.8432127237319946,
+          "drop": 0.1555938720703125
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9898508787155151,
+          "drop": 0.008955717086791992
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.756845235824585
+        ],
+        [
+          "prof_dst_7",
+          1.6246296167373657
+        ],
+        [
+          "pair_w7d_count",
+          0.974719762802124
+        ],
+        [
+          "amount_paid",
+          0.842812716960907
+        ],
+        [
+          "pair_past_count",
+          0.37511131167411804
+        ]
+      ]
+    },
+    {
+      "row": 4510185,
+      "base_score": 0.9987409710884094,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.009484284557402134,
+          "drop": 0.9892566865310073
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9987409710884094,
+          "drop": 0.0
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9976972937583923,
+          "drop": 0.0010436773300170898
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9969039559364319,
+          "drop": 0.001837015151977539
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.1486719250679016,
+          "drop": 0.8500690460205078
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9989500641822815,
+          "drop": -0.0002090930938720703
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9705450534820557,
+          "drop": 0.02819591760635376
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9802032709121704,
+          "drop": 0.018537700176239014
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.824845552444458
+        ],
+        [
+          "prof_dst_7",
+          1.4621589183807373
+        ],
+        [
+          "pair_w7d_count",
+          1.1554051637649536
+        ],
+        [
+          "amount_paid",
+          0.7842546701431274
+        ],
+        [
+          "prof_src_4",
+          0.5241219997406006
+        ]
+      ]
+    },
+    {
+      "row": 4750600,
+      "base_score": 0.9987370371818542,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.4747960865497589,
+          "drop": 0.5239409506320953
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9987370371818542,
+          "drop": 0.0
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9964189529418945,
+          "drop": 0.002318084239959717
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9958816766738892,
+          "drop": 0.002855360507965088
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.03428694233298302,
+          "drop": 0.9644500948488712
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9919977784156799,
+          "drop": 0.006739258766174316
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9982627034187317,
+          "drop": 0.0004743337631225586
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.991083025932312,
+          "drop": 0.007654011249542236
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.924327850341797
+        ],
+        [
+          "pair_w7d_count",
+          0.9089195728302002
+        ],
+        [
+          "prof_src_4",
+          0.8432115912437439
+        ],
+        [
+          "amount_paid",
+          0.7685637474060059
+        ],
+        [
+          "prof_src_7",
+          0.4946363866329193
+        ]
+      ]
+    },
+    {
+      "row": 2116338,
+      "base_score": 0.9986616373062134,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.3556104302406311,
+          "drop": 0.6430512070655823
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9986616373062134,
+          "drop": 0.0
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9937779903411865,
+          "drop": 0.0048836469650268555
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9905471205711365,
+          "drop": 0.008114516735076904
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.05502468720078468,
+          "drop": 0.9436369501054287
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9931001663208008,
+          "drop": 0.005561470985412598
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9981681108474731,
+          "drop": 0.0004935264587402344
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9845394492149353,
+          "drop": 0.014122188091278076
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.722134590148926
+        ],
+        [
+          "pair_w7d_count",
+          0.8992613554000854
+        ],
+        [
+          "amount_paid",
+          0.8425869345664978
+        ],
+        [
+          "prof_src_4",
+          0.713427722454071
+        ],
+        [
+          "dow",
+          0.5735395550727844
+        ]
+      ]
+    },
+    {
+      "row": 3035784,
+      "base_score": 0.9986205101013184,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.07492359727621078,
+          "drop": 0.9236969128251076
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9986410737037659,
+          "drop": -2.0563602447509766e-05
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9980401396751404,
+          "drop": 0.0005803704261779785
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9977548718452454,
+          "drop": 0.000865638256072998
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.04322858154773712,
+          "drop": 0.9553919285535812
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.998076319694519,
+          "drop": 0.0005441904067993164
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.826161801815033,
+          "drop": 0.1724587082862854
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9905053973197937,
+          "drop": 0.008115112781524658
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.945847272872925
+        ],
+        [
+          "prof_dst_7",
+          1.6109411716461182
+        ],
+        [
+          "pair_w7d_count",
+          0.9686405658721924
+        ],
+        [
+          "amount_paid",
+          0.741807222366333
+        ],
+        [
+          "prof_src_4",
+          0.7108921408653259
+        ]
+      ]
+    },
+    {
+      "row": 4127877,
+      "base_score": 0.9984789490699768,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.020922169089317322,
+          "drop": 0.9775567799806595
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9984789490699768,
+          "drop": 0.0
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9961161613464355,
+          "drop": 0.0023627877235412598
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9949941039085388,
+          "drop": 0.0034848451614379883
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.15316206216812134,
+          "drop": 0.8453168869018555
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9989545345306396,
+          "drop": -0.0004755854606628418
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9310643076896667,
+          "drop": 0.06741464138031006
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9840795397758484,
+          "drop": 0.014399409294128418
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.6437416076660156
+        ],
+        [
+          "prof_dst_7",
+          1.7678714990615845
+        ],
+        [
+          "pair_w7d_count",
+          1.0113563537597656
+        ],
+        [
+          "amount_paid",
+          0.8539596199989319
+        ],
+        [
+          "pair_past_count",
+          0.44869890809059143
+        ]
+      ]
+    },
+    {
+      "row": 4127874,
+      "base_score": 0.9984094500541687,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.029802387580275536,
+          "drop": 0.9686070624738932
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9984094500541687,
+          "drop": 0.0
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9955880641937256,
+          "drop": 0.0028213858604431152
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9952557682991028,
+          "drop": 0.003153681755065918
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.09236149489879608,
+          "drop": 0.9060479551553726
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.99825519323349,
+          "drop": 0.00015425682067871094
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9596611261367798,
+          "drop": 0.038748323917388916
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9725521802902222,
+          "drop": 0.025857269763946533
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.7277047634124756
+        ],
+        [
+          "prof_dst_7",
+          1.6143802404403687
+        ],
+        [
+          "pair_w7d_count",
+          1.0207133293151855
+        ],
+        [
+          "amount_paid",
+          0.8642303347587585
+        ],
+        [
+          "pair_past_count",
+          0.4263196289539337
+        ]
+      ]
+    },
+    {
+      "row": 3863663,
+      "base_score": 0.9983096122741699,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.01180380117148161,
+          "drop": 0.9865058111026883
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9992141723632812,
+          "drop": -0.0009045600891113281
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9978854060173035,
+          "drop": 0.0004242062568664551
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9941105246543884,
+          "drop": 0.004199087619781494
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.07736264914274216,
+          "drop": 0.9209469631314278
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9982660412788391,
+          "drop": 4.357099533081055e-05
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9211937785148621,
+          "drop": 0.07711583375930786
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9933385252952576,
+          "drop": 0.0049710869789123535
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.7280144691467285
+        ],
+        [
+          "prof_dst_7",
+          1.4678888320922852
+        ],
+        [
+          "pair_w7d_count",
+          1.0701862573623657
+        ],
+        [
+          "prof_src_4",
+          0.5694639086723328
+        ],
+        [
+          "pair_past_count",
+          0.46344149112701416
+        ]
+      ]
+    },
+    {
+      "row": 4550048,
+      "base_score": 0.9982982277870178,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.030923601239919662,
+          "drop": 0.9673746265470982
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9983236193656921,
+          "drop": -2.5391578674316406e-05
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9978466033935547,
+          "drop": 0.00045162439346313477
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9945809245109558,
+          "drop": 0.0037173032760620117
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.07354241609573364,
+          "drop": 0.9247558116912842
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9992202520370483,
+          "drop": -0.0009220242500305176
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.8845379948616028,
+          "drop": 0.11376023292541504
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9897779822349548,
+          "drop": 0.008520245552062988
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.770426034927368
+        ],
+        [
+          "prof_dst_7",
+          1.5262311697006226
+        ],
+        [
+          "pair_w7d_count",
+          1.0077922344207764
+        ],
+        [
+          "amount_paid",
+          0.5595716238021851
+        ],
+        [
+          "pair_past_count",
+          0.46245208382606506
+        ]
+      ]
+    },
+    {
+      "row": 4962212,
+      "base_score": 0.9982927441596985,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.02231203392148018,
+          "drop": 0.9759807102382183
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9982927441596985,
+          "drop": 0.0
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9974308609962463,
+          "drop": 0.0008618831634521484
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.993240237236023,
+          "drop": 0.005052506923675537
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.06739236414432526,
+          "drop": 0.9309003800153732
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9983611702919006,
+          "drop": -6.842613220214844e-05
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9516629576683044,
+          "drop": 0.04662978649139404
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9872032999992371,
+          "drop": 0.011089444160461426
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.767827272415161
+        ],
+        [
+          "prof_dst_7",
+          1.2264835834503174
+        ],
+        [
+          "pair_w7d_count",
+          1.133047342300415
+        ],
+        [
+          "prof_src_4",
+          0.661106288433075
+        ],
+        [
+          "amount_paid",
+          0.5114205479621887
+        ]
+      ]
+    },
+    {
+      "row": 4790090,
+      "base_score": 0.9982876181602478,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.02530936896800995,
+          "drop": 0.9729782491922379
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9982876181602478,
+          "drop": 0.0
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9971643090248108,
+          "drop": 0.0011233091354370117
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9952928423881531,
+          "drop": 0.0029947757720947266
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.4104137718677521,
+          "drop": 0.5878738462924957
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9987597465515137,
+          "drop": -0.00047212839126586914
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9524510502815247,
+          "drop": 0.045836567878723145
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.989062488079071,
+          "drop": 0.009225130081176758
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.516897439956665
+        ],
+        [
+          "prof_dst_7",
+          1.610799789428711
+        ],
+        [
+          "pair_w7d_count",
+          1.0397483110427856
+        ],
+        [
+          "amount_paid",
+          0.7392372488975525
+        ],
+        [
+          "pair_past_count",
+          0.44808727502822876
+        ]
+      ]
+    },
+    {
+      "row": 4550044,
+      "base_score": 0.9981922507286072,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.00500312028452754,
+          "drop": 0.9931891304440796
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9981922507286072,
+          "drop": 0.0
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9966145157814026,
+          "drop": 0.0015777349472045898
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.9972027540206909,
+          "drop": 0.0009894967079162598
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.0550786517560482,
+          "drop": 0.943113598972559
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.9981953501701355,
+          "drop": -3.0994415283203125e-06
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9221065640449524,
+          "drop": 0.07608568668365479
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9961515069007874,
+          "drop": 0.0020407438278198242
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.760725259780884
+        ],
+        [
+          "prof_dst_7",
+          1.460052490234375
+        ],
+        [
+          "pair_w7d_count",
+          1.0973646640777588
+        ],
+        [
+          "prof_src_4",
+          0.528742790222168
+        ],
+        [
+          "pair_past_count",
+          0.5209084749221802
+        ]
+      ]
+    },
+    {
+      "row": 4127862,
+      "base_score": 0.9981120824813843,
+      "groups": {
+        "pair_frequency": {
+          "n_cols": 13,
+          "score_after": 0.02221471071243286,
+          "drop": 0.9758973717689514
+        },
+        "burst_activity": {
+          "n_cols": 16,
+          "score_after": 0.9981120824813843,
+          "drop": 0.0
+        },
+        "daily_volume": {
+          "n_cols": 12,
+          "score_after": 0.9958996176719666,
+          "drop": 0.0022124648094177246
+        },
+        "weekly_volume": {
+          "n_cols": 12,
+          "score_after": 0.993372917175293,
+          "drop": 0.004739165306091309
+        },
+        "entity_diff": {
+          "n_cols": 2,
+          "score_after": 0.13154363632202148,
+          "drop": 0.8665684461593628
+        },
+        "src_profile": {
+          "n_cols": 9,
+          "score_after": 0.997056245803833,
+          "drop": 0.0010558366775512695
+        },
+        "dst_profile": {
+          "n_cols": 9,
+          "score_after": 0.9882351160049438,
+          "drop": 0.00987696647644043
+        },
+        "amount": {
+          "n_cols": 7,
+          "score_after": 0.9867082834243774,
+          "drop": 0.011403799057006836
+        }
+      },
+      "local_shap_top5": [
+        [
+          "payment_format",
+          3.736680269241333
+        ],
+        [
+          "pair_w7d_count",
+          0.9864506721496582
+        ],
+        [
+          "prof_dst_7",
+          0.8117240071296692
+        ],
+        [
+          "prof_src_4",
+          0.6930077075958252
+        ],
+        [
+          "dow",
+          0.5969153046607971
+        ]
+      ]
+    }
+  ]
+}
