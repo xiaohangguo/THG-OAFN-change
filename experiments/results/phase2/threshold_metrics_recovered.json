@@ -1,0 +1,19 @@
+{
+  "run_id": "2026-09-21T06:49:13Z-recovered",
+  "protocol": "threshold locked on validation (max-F1), reported once on test",
+  "note": "Recovered from cloud polling log after instance shutdown. Cloud json (threshold_metrics_20260921T064913Z.json) was not pulled before shutdown. seed 2024 per-seed row was rotated out of the 4-line tail; its AUPRC participated in the mean. Rerun scripts/threshold_metrics.py to regenerate the full artifact when a machine is next available.",
+  "per_seed": [
+    {"seed": 42, "threshold": 0.8010, "test_f1": 0.5928, "test_precision": 0.8869, "test_recall": 0.4452},
+    {"seed": 123, "threshold": 0.8261, "test_f1": 0.5753, "test_precision": 0.8994, "test_recall": 0.4229},
+    {"seed": 456, "threshold": 0.8186, "test_f1": 0.5892, "test_precision": 0.8860, "test_recall": 0.4413},
+    {"seed": 789, "threshold": 0.7760, "test_f1": 0.5958, "test_precision": 0.8723, "test_recall": 0.4524},
+    {"seed": 2024, "threshold": null, "test_f1": null, "test_precision": null, "test_recall": null, "note": "line lost to log rotation; present in cloud json only"}
+  ],
+  "mean": {
+    "test_auprc": 0.6213578843859762,
+    "test_f1_4seed_only": 0.588275,
+    "test_precision_4seed_only": 0.88615,
+    "test_recall_4seed_only": 0.44045
+  },
+  "reading": "At the validation-locked operating point the model is precision-first: ~88.6% of alerts are true laundering, capturing ~44% of laundering cases. Combined with P@0.1%=0.834 / R@1%=0.843 this brackets the deployment-relevant regime."
+}
