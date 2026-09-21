@@ -1,6 +1,6 @@
 # 参考文献（GB/T 7714-2015 顺序编码制）
 
-> 状态：骨架 v1。★ = 确定存在的文献，卷期页码投稿前核对；TODO = 需检索补全作者/出处，禁止凭记忆填写。正文中引用位置见各章 [n] 占位（排版阶段统一编号）。
+> 状态：v2（2026-09-21，arXiv API 核实后）。★ = 已核实存在；TODO = 投稿前需知网/官网补全，禁止凭记忆填写。
 
 [1]★ Rudin C. Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead[J]. Nature Machine Intelligence, 2019, 1(5): 206-215.
 
@@ -20,26 +20,31 @@
 
 [9]★ Weber M, Domeniconi G, Chen J, et al. Anti-money laundering in bitcoin: Experimenting with graph convolutional networks for financial forensics[C]//KDD Workshop on Anomaly Detection in Finance. 2019.
 
-[10] FATF. Emerging risks and trends in the financial sector[R]. Paris: Financial Action Task Force, TODO: 具体年份与报告编号.
+[10]★ Weber M, Chen J, Suzumura T, et al. Scalable graph learning for anti-money laundering: A first look[C]//NeurIPS 2018 Workshop on Challenges and Opportunities for AI in Financial Services. arXiv:1812.00076, 2018.（AMLSim 模拟器原始出处）
 
-[11] TODO: IBM AML HI-Small 数据集出处（AMLSim/IBM Simulated AML 数据集论文，arXiv 编号与作者待检索核对）.
+[11]★ Multerer L, Inchingolo M, Kletz D, et al. Counterfactual methods for detecting unfairness in anti-money laundering algorithms[J]. arXiv:2607.05101, 2026.（IBM AMLSim 数据集使用与反事实分析先例）
 
-[12] TODO: AML 机器学习综述 1 篇（近 3 年，优选中文核心《计算机应用》/《计算机工程与应用》上的 AML 综述，兼顾中文引用规范）.
+[12]★ Losavio L, Sovrano F, Fenoglio D, et al. SALT-GNN: Handling dense neighborhoods in anti-money laundering graphs via statistics-aware attention[J]. arXiv:2607.10131, 2026.（同数据集 HI-Small 的 GNN 最新工作）
 
-[13] TODO: SHAP 在金融风控应用 1 篇（近 5 年）.
+[13] IBM Tabular Data on AML. IBM AMLSim transaction dataset (HI-Small)[EB/OL]. https://www.kaggle.com/datasets/constellation-ptt/ibm-tabular-data-on-aml, 访问日期: TODO.
 
-[14] TODO: GNN 用于交易图 AML 的代表论文 1-2 篇（排除泄漏协议存疑者需在正文注明）.
+[14] FATF. Opportunities and challenges of new technologies for AML/CFT[R]. Paris: Financial Action Task Force, 2021.（报告编号 TODO）
 
-[15] TODO: 极不平衡学习（代价敏感/尺度加权）方法 1 篇.
+[15] TODO: 中文核心 AML/金融风控机器学习综述 1 篇——知网检索"反洗钱 机器学习"或"金融欺诈 图神经网络"，优先《计算机应用》《计算机工程与应用》近 3 年，兼顾中文引用规范.
+
+[16] TODO: 极不平衡学习（代价敏感/尺度加权）方法 1 篇.
 
 ## 引用位置登记（排版时核对）
 
-- [1] Rudin：引言 1.1、2.3、方法 3.3（"代理路径否决"的立场依据）
+- [1] Rudin：引言 1.1、2.3、方法 3.3
 - [2] Grinsztajn：引言 1.2、2.4、实验 4.5
 - [3] SHAP：方法 3.3、实验 4.3
-- [4][5] XGBoost/LightGBM：方法 3.3、实验 4.1
-- [6] Wachter 反事实：2.3、方法 3.3
-- [7][8] GraphSAGE/GATv2：实验 4.5（诊断链配置出处）
-- [9] Elliptic：2.1
-- [10] FATF：引言 1.1
-- [11] 数据集：实验 4.1
+- [4][5]：方法 3.3、实验 4.1
+- [6] Wachter：2.3、方法 3.3
+- [7][8]：实验 4.5（GraphSAGE/GATv2 配置出处）
+- [9][10]：2.1（GNN 路线与 AMLSim）
+- [11]：2.1、实验 4.1（数据集先例与反事实相关工作）
+- [12]：2.1、4.5（同数据集 GNN 对照工作）
+- [13]：实验 4.1（数据集出处）
+- [14]：引言 1.1（监管背景）
+- [15][16]：相关工作补强位
