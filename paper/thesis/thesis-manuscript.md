@@ -1,10 +1,10 @@
 ﻿# 基于因果行为画像与组级反事实归因的反洗钱交易风险检测研究
 
-（封面占位，按研究生处官方模板填充：学校代码 10595 / 学号 / 密级 / 分类号 / 学位类别、学院、专业、研究方向、研究生、指导教师、答辩日期）
+（封面占位，按研究生处官方模板填充：学校代码 / 学号 / 密级 / 分类号 / 学位类别、学院、专业、研究方向、研究生、指导教师、答辩日期）
 
 ## 原创*.*性声明
 
-（占位，按学校官方模板文本粘贴：本人郑重声明……签名与日期）
+（占位，按学校官方模板文本粘贴）
 
 ## 版权使用授权书
 
@@ -33,8 +33,6 @@ This thesis proposes Causal Behavioural Profiling with Group-Counterfactual Attr
 Temporal extrapolation experiments on a public dataset of 5.07 million transactions show that the framework achieves AUPRC 0.6214 (345× the random baseline) with ROC-AUC 0.9904; reviewing only the top-0.1% risk-ranked transactions captures 47.1% of laundering with 83.4% alert precision. Group-level counterfactuals reveal that two behaviour groups — account-pair high-frequency transfers and intra-entity cross-account differentials — explain nearly the entire flagging cause (drops of 0.93/0.88), with fidelity checks confirming attribution validity; the frontier shows that a 30-feature sparse deployment attains the highest attribution sensitivity (0.968). Systematic diagnostics further demonstrate that end-to-end GNNs (GraphSAGE, GATv2, and enhanced variants) and GraphMAE-style self-supervised graph representations fail to reproduce claimed advantages under the leakage-free protocol, whereas feeding the GNN input features as causal aggregates to gradient-boosted trees improves AUPRC by 0.098 — the effective carrier of transaction-graph structural information is explicit causal features, not end-to-end embeddings. All results satisfy a 5-seed reproducible protocol with cross-environment consistency.
 
 **Key words**: anti-money laundering; transaction risk monitoring; causal features; counterfactual attribution; explainable machine learning; gradient-boosted trees
-
----
 
 ## 目　录
 
@@ -74,21 +72,23 @@ Temporal extrapolation experiments on a public dataset of 5.07 million transacti
 - 致谢
 - 攻读硕士学位期间取得的研究成果
 
+---
+
 # 第1章 绪论
 
 ## 1.1 研究背景与意义
 
 ### 1.1.1 洗钱及其经济危害
 
-洗钱（Money Laundering）是指将毒品犯罪、黑社会性质组织犯罪、恐怖活动犯罪、走私犯罪、贪污贿赂犯罪、破坏金融管理秩序犯罪等违法所得及其收益，通过各种手段掩饰、隐瞒其来源和性质，使其在形式上合法化的行为。金融行动特别工作组（Financial Action Task Force, FATF）将其概括为使犯罪所得"注入金融系统、伪装其来源、并以合法面目重新进入经济循环"的过程。经典理论将洗钱划分为三个阶段：放置阶段（placement）将现金违法所得引入金融体系，典型手法包括化整为零的结构性存款（smurfing）；分层阶段（layering）通过多层跨账户、跨机构、跨境的资金互转切断资金与犯罪源头之间的可追溯链条；整合阶段（integration）使资金以投资、贸易、借贷等合法形态回流至犯罪控制者手中。三阶段并非严格顺序，实际案例常出现混合与循环形态，但该框架刻画了洗钱资金流转的核心行为特征——高频、多层、跨账户与跨主体的资金转移，这正是后续章节特征工程的行为学基础。
+洗钱（Money Laundering）是指将毒品犯罪、黑社会性质组织犯罪、恐怖活动犯罪、走私犯罪、贪污贿赂犯罪、破坏金融管理秩序犯罪等违法所得及其收益，通过各种手段掩饰、隐瞒其来源和性质，使其在形式上合法化的行为。金融行动特别工作组（Financial Action Task Force, FATF）将其概括为使犯罪所得"注入金融系统、伪装其来源、并以合法面目重新进入经济循环"的过程[1]。经典理论将洗钱划分为三个阶段：放置阶段（placement）将现金违法所得引入金融体系，典型手法包括化整为零的结构性存款（smurfing）；分层阶段（layering）通过多层跨账户、跨机构、跨境的资金互转切断资金与犯罪源头之间的可追溯链条；整合阶段（integration）使资金以投资、贸易、借贷等合法形态回流至犯罪控制者手中。三阶段并非严格顺序，实际案例常出现混合与循环形态，但该框架刻画了洗钱资金流转的核心行为特征——高频、多层、跨账户与跨主体的资金转移，这正是后续章节特征工程的行为学基础。
 
-洗钱的经济危害不止于为上游犯罪输血。联合国毒品和犯罪问题办公室（UNODC）估算，全球每年被清洗的非法资金规模约占全球国内生产总值的 2% 至 5%。洗钱扭曲资本配置、侵蚀金融机构稳健性、助长腐败与恐怖融资，并对税收与货币政策形成干扰。对金融机构自身而言，卷入洗钱事件意味着巨额监管处罚、业务资格受限与声誉损失——近年来多家国际大型银行因反洗钱合规缺陷被处以数亿乃至数十亿美元级罚金的案例屡见不鲜。
+洗钱的经济危害不止于为上游犯罪输血。联合国毒品和犯罪问题办公室（UNODC）估算，全球每年被清洗的非法资金规模约占全球国内生产总值的 2% 至 5%[2]。洗钱扭曲资本配置、侵蚀金融机构稳健性、助长腐败与恐怖融资，并对税收与货币政策形成干扰。对金融机构自身而言，卷入洗钱事件意味着巨额监管处罚、业务资格受限与声誉损失——近年来多家国际大型银行因反洗钱合规缺陷被处以数亿乃至数十亿美元级罚金的案例屡见不鲜。
 
 ### 1.1.2 反洗钱监管体系
 
-国际层面，FATF 于 1989 年由七国集团倡议成立，现已发展成为覆盖全球主要经济体的政府间反洗钱与反恐怖融资标准制定组织，其《四十项建议》（1990 年首次发布，2012 年全面修订）构成国际反洗钱标准的基干，内容包括洗钱犯罪化、客户尽职调查、可疑交易报告、记录保存与国际协作等，并通过互评估机制对成员合规水平进行分级施压。巴塞尔银行监管委员会从审慎监管角度发布了客户尽职调查等指引；埃格蒙特集团（Egmont Group）则协调各国金融情报机构（FIU）之间的信息交换。区域与国别层面，美国以《银行保密法》（BSA, 1970）及其后续立法为骨架，欧盟通过历次反洗钱指令（AMLD）迭代监管要求。
+国际层面，FATF 于 1989 年由七国集团倡议成立，现已发展成为覆盖全球主要经济体的政府间反洗钱与反恐怖融资标准制定组织，其《四十项建议》（1990 年首次发布，2012 年全面修订）构成国际反洗钱标准的基干[1]，内容包括洗钱犯罪化、客户尽职调查、可疑交易报告、记录保存与国际协作等，并通过互评估机制对成员合规水平进行分级施压。巴塞尔银行监管委员会从审慎监管角度发布了客户尽职调查等指引；埃格蒙特集团（Egmont Group）则协调各国金融情报机构（FIU）之间的信息交换。区域与国别层面，美国以《银行保密法》（BSA, 1970）及其后续立法为骨架，欧盟通过历次反洗钱指令（AMLD）迭代监管要求。
 
-中国已建成以《中华人民共和国反洗钱法》为核心的反洗钱法律体系。该法于 2006 年通过、2007 年 1 月 1 日施行，确立了中国反洗钱监督管理体系和金融机构的反洗钱义务；2024 年 11 月，全国人大常委会审议通过修订后的《反洗钱法》，自 2025 年 1 月 1 日起施行，修订版扩展了洗钱上游犯罪类型、强化了金融机构的客户尽职调查与受益所有人识别义务、完善了风险为本的监管框架。中国人民银行作为反洗钱行政主管部门，通过《金融机构大额交易和可疑交易报告管理办法》等部门规章，要求金融机构对达到规定标准的大额交易提交大额交易报告，对涉嫌洗钱及上游犯罪的交易提交可疑交易报告（Suspicious Activity Report, SAR）。商业银行、支付机构、证券与保险机构均在此框架下承担数据报送、名单监控与主动分析义务。
+中国已建成以《中华人民共和国反洗钱法》为核心的反洗钱法律体系。该法于 2006 年通过、2007 年 1 月 1 日施行，确立了中国反洗钱监督管理体系和金融机构的反洗钱义务；2024 年 11 月，全国人大常委会审议通过修订后的《反洗钱法》，自 2025 年 1 月 1 日起施行[3]，修订版扩展了洗钱上游犯罪类型、强化了金融机构的客户尽职调查与受益所有人识别义务、完善了风险为本的监管框架。中国人民银行作为反洗钱行政主管部门，通过《金融机构大额交易和可疑交易报告管理办法》等部门规章，要求金融机构对达到规定标准的大额交易提交大额交易报告，对涉嫌洗钱及上游犯罪的交易提交可疑交易报告（Suspicious Activity Report, SAR）。商业银行、支付机构、证券与保险机构均在此框架下承担数据报送、名单监控与主动分析义务。
 
 ### 1.1.3 金融机构反洗钱实践的技术痛点
 
@@ -104,19 +104,23 @@ Temporal extrapolation experiments on a public dataset of 5.07 million transacti
 
 ### 1.2.1 基于机器学习的洗钱交易检测
 
-早期反洗钱分析以描述统计与专家规则为主。随后的研究将监督学习引入该任务：在手工构造的账户与交易特征上训练逻辑回归、决策树、随机森林与梯度提升树，并针对类别不平衡采用代价敏感学习与重采样技术。这一路线的成熟形态即梯度提升机（GBDT）家族——XGBoost 与 LightGBM 在结构化金融数据上表现出色，训练高效且对特征尺度不敏感。已有系统研究表明，在中小规模、低信噪比的表格数据上，树模型仍普遍优于深度神经网络。对反洗钱任务而言，监督学习的固有限度在于标注稀缺：洗钱标签来自事后侦查与人工认定，正样本稀少且分布随时间漂移。
+反洗钱分析的方法演进大致经历三个阶段。第一阶段以描述统计与专家规则为主：监管规则直接翻译为阈值与名单过滤，其局限前已述及——规则的可解释性最强，但召回受限于已知模式且易被结构性拆分规避。第二阶段为经典机器学习：研究者将交易与账户的统计特征（金额分布、频次、时间间隔、对手集中度等）输入监督学习模型。这一路线的代表工作将机器学习用于客户风险分类与可疑交易识别，Reite 等在客户风险分级任务上系统比较了多种机器学习模型与规则方法的效率差异，证实学习型方法在保持监管可控性的前提下能显著提升预警质量[4]。梯度提升树（Gradient Boosted Decision Tree, GBDT）家族很快成为该类结构化任务的主力：XGBoost 通过二阶泰勒展开与正则化目标将加法模型的训练效率与泛化能力推到新高度[5]，LightGBM 以直方图分裂与叶子优先策略进一步压缩大规模数据的训练成本[6]，二者在金融风控的工业实践中占据主导地位。第三阶段是深度学习尝试，包括交易序列上的循环网络与自编码器异常检测，但已有系统性实证表明，在中小规模、低信噪比、特征异构的表格数据上，树模型仍普遍优于深度神经网络[7]——金融交易风控恰属此形态。对反洗钱任务而言，监督学习的固有限度在于标注稀缺：洗钱标签来自事后侦查与人工认定，正样本稀少且分布随时间漂移，任何忽视时序外推难度与泄漏风险的评估都会高估方法的实战价值。
 
 ### 1.2.2 图神经网络在金融交易图上的应用
 
-交易数据天然构成有向图（账户为节点、交易为边），图神经网络（GNN）通过消息传递聚合邻域信息，理论上适配洗钱资金流转的关系模式。Weber 等最早在合成交易图上探索图卷积用于反洗钱，并发布了 AMLSim 模拟器与后续的 Elliptic 数据集；此后 GATv2、GraphSAGE 等架构被陆续应用于交易图风控，近期工作（如 SALT-GNN）进一步针对高密度邻域设计统计感知注意力。然而该路线的评估普遍存在协议缺陷：随机切分破坏交易时间依赖，未遮蔽的全图损失造成标签泄漏——测试集节点与标签直接参与训练。在严格无泄漏的时序外推协议下，端到端 GNN 能否复现文献声称的优势，长期缺乏系统检验。
+交易数据天然构成有向图（账户为节点、交易为边），图神经网络（Graph Neural Network, GNN）通过消息传递聚合邻域信息，理论上适配洗钱资金流转的关系模式。该路线的奠基性工作由 IBM 研究团队完成：Weber 等开发了交易图模拟器 AMLSim，并在百万节点合成图上首次评估了图卷积网络的可扩展性[8]；随后发布的 Elliptic 比特币交易图数据集使该方向获得了公开基准[9]，anti-money laundering 的图学习研究由此展开。方法层面，Alarab 等将图卷积与循环结构结合，用时序图卷积网络对交易图上的洗钱行为进行实验，比较了多种图结构下的聚合效果[10]；Bakhshinejad 等提出面向交易监测的图深度学习模型并讨论了图表示在洗钱检测任务中的适配问题[11]；Ferretti 等将 GNN 应用于加密货币交易的反洗钱框架，报告了图结构带来的增益[12]。近期工作开始正视该路线的评估与结构缺陷：Losavio 等针对高密度邻域导致注意力衰减的问题提出统计感知注意力架构 SALT-GNN，并在 HI-Small 等数据集上按接收方度数分层评估[13]——分层评估揭示密集邻域下的性能退化，说明总体指标掩盖了作业层面的失效模式。
+
+然而该路线的评估普遍存在协议缺陷：随机切分破坏交易时间依赖，未遮蔽的全图损失造成标签泄漏——测试集节点与标签直接参与训练。在严格无泄漏的时序外推协议下，端到端 GNN 能否复现文献声称的优势，长期缺乏系统检验。本文第4.5节的七配置诊断链正是对该缺口的直接回应。
 
 ### 1.2.3 可解释性与反事实归因
 
-模型解释工具以 LIME 与 SHAP 为代表，后者基于合作博弈论的 Shapley 值给出特征贡献的唯一公平分配，并借助 TreeSHAP 在树模型上实现多项式时间的精确计算，已在金融风控中获得应用。针对事后解释的局限，Rudin 提出对高风险决策应直接采用内在可解释模型；Wachter 等提出的反事实解释将"为什么被拒绝"转述为"最少改变哪些输入即可改变决策"，更贴近业务语言。在反洗钱场景，反事实方法已被用于公平性审计。但现有归因工作多以单特征为干预单位，在高度冗余的特征集上因特征可互换性而失效；反事实的干预语义（如特征置零）在树模型上亦不构成真实行为改变。以业务行为模式为单位的归因协议仍属空白。
+模型解释工具方面，Ribeiro 等提出的 LIME 以局部线性近似解释任意黑箱模型的单点预测，开创了事后解释的通用框架[14]；Lundberg 与 Lee 提出的 SHAP 将预测归因形式化为合作博弈的 Shapley 值分配，给出唯一满足公理性的特征贡献度量[15]，并借助 TreeSHAP 在树模型上实现多项式时间精确计算，已在金融风控中获得广泛应用。针对事后解释的局限，Rudin 系统论证了对高风险决策应直接采用内在可解释模型而非解释黑箱，指出事后解释可能给出与真实决策机制不符的"保真幻觉"[16]；Wachter 等提出的反事实解释将"为什么被拒绝"转述为"最少改变哪些输入即可改变决策"[17]，更贴近业务语言并规避了打开黑箱的需要。在反洗钱场景，Multerer 等将反事实的路径特定效应分析用于 AML 算法的公平性审计，检验了敏感特征经由图结构与行为特征对预测的间接影响[18]——该工作同时表明，反事实方法在交易数据上的落地需要与特征语义深度耦合。
+
+但现有归因工作多以单特征为干预单位，在高度冗余的特征集上因特征可互换性而失效；反事实的干预语义（如特征置零）在树模型上亦不构成真实行为改变。以业务行为模式为单位、干预语义锚定于总体分布的归因协议仍属空白，这正是本文第3.3节的切入点。
 
 ### 1.2.4 研究现状简评
 
-综合上述三支文献，可提炼三点缺口。其一，评估协议缺位：泄漏与随机切分使跨论文数字比较失去意义，协议缺陷的影响幅度缺少定量刻画。其二，归因粒度错配：特征级归因与业务可读的"行为模式解释"之间存在断层，冗余特征集使前者系统性失效。其三，载体之争未决：图结构信息对反洗钱任务的价值已被多方暗示，但其有效载体（端到端嵌入抑或显式因果特征）缺乏对照实验裁决。本文针对三点缺口分别给出协议、归因与诊断层面的回应。
+综合上述三支文献，可提炼三点缺口。其一，评估协议缺位：泄漏与随机切分使跨论文数字比较失去意义，协议缺陷的影响幅度缺少定量刻画——本文以泄漏法医实验回应（第4.6节）。其二，归因粒度错配：特征级归因与业务可读的"行为模式解释"之间存在断层，冗余特征集使前者系统性失效——本文以组级反事实协议回应（第3.3节）。其三，载体之争未决：图结构信息对反洗钱任务的价值已被多方暗示[12][13]，但其有效载体（端到端嵌入抑或显式因果特征）缺乏对照实验裁决——本文以七配置诊断链与特征探针实验回应（第4.5节）。
 
 ## 1.3 研究内容与创新点
 
@@ -156,7 +160,7 @@ Temporal extrapolation experiments on a public dataset of 5.07 million transacti
 
 ### 2.2.2 XGBoost 的正则化目标
 
-XGBoost 将梯度提升形式化为带正则项的加法模型学习。设数据集 $\{(x_i, y_i)\}_{i=1}^{n}$，模型为 $K$ 棵回归树的和 $\hat{y}_i = \sum_{k=1}^{K} f_k(x_i)$，$f_k \in \mathcal{F}$ 为树空间。第 $t$ 轮迭代的目标函数为
+XGBoost[5] 将梯度提升形式化为带正则项的加法模型学习。设数据集 $\{(x_i, y_i)\}_{i=1}^{n}$，模型为 $K$ 棵回归树的和 $\hat{y}_i = \sum_{k=1}^{K} f_k(x_i)$，$f_k \in \mathcal{F}$ 为树空间。第 $t$ 轮迭代的目标函数为
 
 $$\mathcal{L}^{(t)} = \sum_{i=1}^{n} l\left(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)\right) + \Omega(f_t),$$
 
@@ -168,7 +172,7 @@ $$\tilde{\mathcal{L}}^{(t)} = \sum_{i=1}^{n} \left[g_i f_t(x_i) + \frac{1}{2} h_
 
 $$\text{Gain} = \frac{1}{2}\left[\frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda}\right] - \gamma,$$
 
-增益为正才分裂，$\gamma$ 起预剪枝作用。二阶信息使收敛更快，正则项与行/列采样（subsample、colsample_bytree）共同控制方差，scale_pos_weight 对正样本梯度加权实现代价敏感学习。工程上，XGBoost 以预排序直方图（hist）算法高效枚举分裂候选。已有系统性实证（Grinsztajn 等，NeurIPS 2022）表明，树模型在中小规模、低信噪比的异构表格数据上仍普遍优于深度神经网络，金融交易风控恰属此形态。
+增益为正才分裂，$\gamma$ 起预剪枝作用。二阶信息使收敛更快，正则项与行/列采样（subsample、colsample_bytree）共同控制方差，scale_pos_weight 对正样本梯度加权实现代价敏感学习。工程上，XGBoost 以预排序直方图（hist）算法高效枚举分裂候选。已有系统性实证[7]表明，树模型在中小规模、低信噪比的异构表格数据上仍普遍优于深度神经网络，金融交易风控恰属此形态。
 
 ## 2.3 类别不平衡学习与评估指标
 
@@ -178,7 +182,7 @@ $$\text{Gain} = \frac{1}{2}\left[\frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R 
 
 ### 2.3.2 平均精度与不平衡场景下的指标选择
 
-设二分类的查准率 $P = TP/(TP+FP)$、查全率 $R = TP/(TP+FN)$。查准率-查全率曲线（PR 曲线）以判定阈值为参数绘制 $(R, P)$ 轨迹，其曲线下面积即平均精度（Average Precision, AP）。关键性质是 PR 曲线的基线水平等于正样本先验概率 $\pi$：随机猜对的查准率恒为 $\pi$，故 AP 的随机基线为 $\pi$ 本身——在 $\pi=0.001$ 的任务中 AP=0.6 意味着 600 倍于随机的排序质量。相比之下，ROC 曲线以假正例率为横轴，该轴在负类占绝对多数时增长极慢，导致 ROC-AUC 在极端不平衡下呈现乐观偏差（Davis 与 Goadrich 的系统比较）。因此本文以 AUPRC 为主指标、ROC-AUC 为参考，并以 Precision@K/Recall@K 直接对接审核容量语义。
+设二分类的查准率 $P = TP/(TP+FP)$、查全率 $R = TP/(TP+FN)$。查准率-查全率曲线（PR 曲线）以判定阈值为参数绘制 $(R, P)$ 轨迹，其曲线下面积即平均精度（Average Precision, AP）。关键性质是 PR 曲线的基线水平等于正样本先验概率 $\pi$：随机猜对的查准率恒为 $\pi$，故 AP 的随机基线为 $\pi$ 本身——在 $\pi=0.001$ 的任务中 AP=0.6 意味着 600 倍于随机的排序质量。相比之下，ROC 曲线以假正例率为横轴，该轴在负类占绝对多数时增长极慢，导致 ROC-AUC 在极端不平衡下呈现乐观偏差[21]。因此本文以 AUPRC 为主指标、ROC-AUC 为参考，并以 Precision@K/Recall@K 直接对接审核容量语义。
 
 ## 2.4 图神经网络
 
@@ -192,13 +196,13 @@ $$h_v^{(k)} = \sigma\left(W_k \cdot \text{AGG}\left(\{h_u^{(k-1)} : u \in \mathc
 
 ### 2.4.2 GraphSAGE 与 GATv2
 
-GraphSAGE 针对大图提出采样式归纳学习：每轮对每节点采样固定数量邻居，聚合（均值/池化/LSTM）后与自身表示拼接，使模型可泛化到训练期未见的节点。图注意力网络以注意力系数加权邻居消息，原始 GAT 的打分函数 $\alpha_{uv} = \mathrm{softmax}_u\left(\mathrm{LeakyReLU}\left(a^\top [W h_u \| W h_v]\right)\right)$ 被证明其打分与值变换的先后次序导致"静态注意力"缺陷；GATv2 调整为先变换后非线性再打分，恢复表达力。在反洗钱场景，图结构具有低同质性（homophily）特点——欺诈账户的邻居大多为正常账户，均值式聚合会将正常邻域的"平均行为"稀释进欺诈节点表示，这是端到端 GNN 在该类任务上表现受限的结构性原因之一，第4.5节的诊断实验将进一步实证该现象。
+GraphSAGE[19] 针对大图提出采样式归纳学习：每轮对每节点采样固定数量邻居，聚合（均值/池化/LSTM）后与自身表示拼接，使模型可泛化到训练期未见的节点。图注意力网络以注意力系数加权邻居消息，原始 GAT[20] 的打分函数 $\alpha_{uv} = \mathrm{softmax}_u\left(\mathrm{LeakyReLU}\left(a^\top [W h_u \| W h_v]\right)\right)$ 被证明其打分与值变换的先后次序导致"静态注意力"缺陷；GATv2[20] 调整为先变换后非线性再打分，恢复表达力。在反洗钱场景，图结构具有低同质性（homophily）特点——欺诈账户的邻居大多为正常账户，均值式聚合会将正常邻域的"平均行为"稀释进欺诈节点表示，这是端到端 GNN 在该类任务上表现受限的结构性原因之一，第4.5节的诊断实验将进一步实证该现象。
 
 ## 2.5 可解释机器学习与反事实归因
 
 ### 2.5.1 SHAP 与 TreeSHAP
 
-SHAP 将预测归因问题形式化为合作博弈的收益分配：特征集 $F$ 的子集 $S$ 对应"仅使用 $S$ 中特征"的模型输出 $v(S)$，特征 $i$ 的 Shapley 值
+SHAP[15] 将预测归因问题形式化为合作博弈的收益分配：特征集 $F$ 的子集 $S$ 对应"仅使用 $S$ 中特征"的模型输出 $v(S)$，特征 $i$ 的 Shapley 值
 
 $$\phi_i = \sum_{S \subseteq F \setminus \{i\}} \frac{|S|!\,(|F|-|S|-1)!}{|F|!}\left[v(S \cup \{i\}) - v(S)\right]$$
 
@@ -206,7 +210,7 @@ $$\phi_i = \sum_{S \subseteq F \setminus \{i\}} \frac{|S|!\,(|F|-|S|-1)!}{|F|!}\
 
 ### 2.5.2 反事实解释与归因的验收
 
-反事实解释（Wachter 等，2018）不问"哪个特征重要"，而问"对输入作何种最小改动即可翻转决策"，其形式化为在数据流形附近寻找 $x' = \arg\min_{x'} \ell(f(x'), 1 - f(x)) + \lambda d(x, x')$。反事实语言天然贴近业务问法（"若无此高频互转行为，是否仍被标记"），但其有效性依赖干预语义的真实性：对树模型直接将特征置零，零值沿训练期习得的默认分支传播，并不对应任何真实行为假设；合理锚点应参照总体分布（如取总体中位数，对应"回到普通账户水平"）。归因质量的验收指标包括 fidelity（按归因遮蔽/干预后模型分数的实际坍缩幅度）与 sparsity（解释涉及的行为单位数），本文第3.3节与第4.3节以此规范组级反事实协议的设计与验收。
+反事实解释[17]不问"哪个特征重要"，而问"对输入作何种最小改动即可翻转决策"，其形式化为在数据流形附近寻找 $x' = \arg\min_{x'} \ell(f(x'), 1 - f(x)) + \lambda d(x, x')$。反事实语言天然贴近业务问法（"若无此高频互转行为，是否仍被标记"），但其有效性依赖干预语义的真实性：对树模型直接将特征置零，零值沿训练期习得的默认分支传播，并不对应任何真实行为假设；合理锚点应参照总体分布（如取总体中位数，对应"回到普通账户水平"）。归因质量的验收指标包括 fidelity（按归因遮蔽/干预后模型分数的实际坍缩幅度）与 sparsity（解释涉及的行为单位数），本文第3.3节与第4.3节以此规范组级反事实协议的设计与验收。
 
 ## 2.6 评估协议与信息泄漏
 
@@ -264,7 +268,7 @@ $$x^{(G)} = x\ \text{with}\ \phi_G(x) \leftarrow \operatorname{median}_{\text{te
 
 ## 4.1 数据与实验设置
 
-实验数据为 IBM AML HI-Small 交易数据集（合成数据，许可 CDLA-Sharing-1.0，将在数据卡中披露合成性质）。经分块审计器校验：共 5,078,345 笔交易，洗钱正样本 5,177 笔（0.102%），账户 515,080 个，银行 30,470 家，支付方式 7 种，无效时间戳 0 条；逐文件 SHA-256 指纹已锁定于数据审计元数据，保证跨环境复现的数据一致性。按 3.1 节协议以 60%/20%/20% 时序切分后，测试段正样本密度为 0.177%，高于训练段的 0.075%——这一分布漂移并非数据缺陷，而是洗钱活动时间聚集性的真实反映，时序外推协议将其如实计入评估难度。
+实验数据为 IBM AML HI-Small 交易数据集[22]（合成数据，许可 CDLA-Sharing-1.0，将在数据卡中披露合成性质）。经分块审计器校验：共 5,078,345 笔交易，洗钱正样本 5,177 笔（0.102%），账户 515,080 个，银行 30,470 家，支付方式 7 种，无效时间戳 0 条；逐文件 SHA-256 指纹已锁定于数据审计元数据，保证跨环境复现的数据一致性。按 3.1 节协议以 60%/20%/20% 时序切分后，测试段正样本密度为 0.177%，高于训练段的 0.075%——这一分布漂移并非数据缺陷，而是洗钱活动时间聚集性的真实反映，时序外推协议将其如实计入评估难度。
 
 正样本占比 0.102% 意味着随机排序的平均精度基线为 0.0018；任何方法的有效性都应相对该基线度量，而非相对直觉。主指标为测试集平均精度（AUPRC），辅以 ROC-AUC 与审核容量指标 Precision@K、Recall@K（K=0.1%、1%，对应反洗钱作业中人工审核的现实约束）。阈值型指标（F1/查准率/查全率）按协议在验证集上以最大 F1 锁定阈值后于测试集单次报告。除注明单种子外，主表结果均为 5 个随机种子（42/123/456/789/2024）的均值与标准差。梯度提升树基学习器统一为正则化 XGBoost（min_child_weight=50、reg_lambda=5、colsample_bytree=0.7、4000 轮上限、验证集 AUPRC 早停），超参由验证集上五候选网格搜索确定并全量存档。
 
@@ -325,7 +329,7 @@ $$x^{(G)} = x\ \text{with}\ \phi_G(x) \leftarrow \operatorname{median}_{\text{te
 
 本文对端到端图路线执行了七配置诊断链（种子 42）：无图对照（同训练循环）0.0885 → GraphSAGE 0.0297 → GATv2 注意力 0.0120 → GATv2+20 维强行为画像 0.0125 → 评分头 warmup 两版（0.0215 / 验证集 0.1502 崩至测试 0.0029）→ 冻结 GNN 嵌入注入 XGBoost 0.5922（低于纯手工特征 0.6276，即嵌入信息量为噪声级）。七发全负，死因复合：极端不平衡下监督梯度稀薄至无法训出超越初始化的表示、低同质性稀释消息传递、边分类的嵌入瓶颈。与之对照，GNN 的输入特征（快照画像 18 列）直接拼接给梯度提升树反而提升 0.098——同一份图信息，端到端学不出，显式因果特征装得下。零标签自监督预训练（GraphMAE 式遮蔽画像重建，GATv2 骨干）同样被证伪：嵌入拼接使平均精度自 0.6276 降至 0.5876（-0.040）。
 
-对金融风险管理的含义直接明了：其一，端到端图神经网络在本任务形态下不可复现文献声称的优势，与表格数据上树模型统治的已有系统证据一致；其二，更深层地，即便精度可行，嵌入形态的模型在监管问询下无法回答"为何标记此笔交易"——本文的显式特征形态使归因协议可直接作用，这本身即是金融场景的硬需求。诊断链的每一环均落盘存档，构成可复查的系统性负结果。
+对金融风险管理的含义直接明了：其一，端到端图神经网络在本任务形态下不可复现文献声称的优势，与表格数据上树模型统治的已有系统证据[7]一致；其二，更深层地，即便精度可行，嵌入形态的模型在监管问询下无法回答"为何标记此笔交易"——本文的显式特征形态使归因协议可直接作用，这本身即是金融场景的硬需求。诊断链的每一环均落盘存档，构成可复查的系统性负结果。
 
 ## 4.6 泄漏法医：文献高指标的一种解剖
 
@@ -369,40 +373,59 @@ $$x^{(G)} = x\ \text{with}\ \phi_G(x) \leftarrow \operatorname{median}_{\text{te
 
 ---
 
-# 参考文献（GB/T 7714-2015 顺序编码制）
+# 参考文献
 
+（按正文首次出现顺序编号，GB/T 7714-2015 顺序编码制。标 [待补] 的条目为知网中文核心检索位，须在校园网环境下检索后录入，禁止臆造。）
 
-[1]★ Rudin C. Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead[J]. Nature Machine Intelligence, 2019, 1(5): 206-215.
+[1] FATF. International standards on combating money laundering and the financing of terrorism & proliferation: The FATF recommendations[R]. Paris: Financial Action Task Force, 2012 (updated 2023).
 
-[2]★ Grinsztajn L, Oyallon E, Varoquaux G. Why do tree-based models still outperform deep learning on typical tabular data?[C]//Advances in Neural Information Processing Systems 35 (NeurIPS 2022). 2022.
+[2] UNODC. Estimating illicit financial flows resulting from drug trafficking and related transnational organized crime[R]. Vienna: United Nations Office on Drugs and Crime, 2011.
 
-[3]★ Lundberg S M, Lee S I. A unified approach to interpreting model predictions[C]//Advances in Neural Information Processing Systems 30 (NeurIPS 2017). 2017.
+[3] 全国人民代表大会常务委员会. 中华人民共和国反洗钱法（2024年修订）[Z]. 2024-11-08 通过, 2025-01-01 施行.
 
-[4]★ Chen T, Guestrin C. XGBoost: A scalable tree boosting system[C]//Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. 2016: 785-794.
+[4] Reite E J, et al. Improving client risk classification with machine learning to increase anti-money laundering efficiency[J]. Journal of Money Laundering Control, 2024. DOI: 10.1108/jmlc-03-2024-0040.
 
-[5]★ Ke G, Meng Q, Finley T, et al. LightGBM: A highly efficient gradient boosting decision tree[C]//Advances in Neural Information Processing Systems 30 (NeurIPS 2017). 2017.
+[5] Chen T, Guestrin C. XGBoost: A scalable tree boosting system[C]//Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. New York: ACM, 2016: 785-794.
 
-[6]★ Wachter S, Mittelstadt B, Russell C. Counterfactual explanations without opening the black box: Automated decisions and the GDPR[J]. Harvard Journal of Law & Technology, 2018, 31(2): 841-887.
+[6] Ke G, Meng Q, Finley T, et al. LightGBM: A highly efficient gradient boosting decision tree[C]//Advances in Neural Information Processing Systems 30. 2017: 3146-3154.
 
-[7]★ Hamilton W, Ying Z, Leskovec J. Inductive representation learning on large graphs[C]//Advances in Neural Information Processing Systems 30 (NeurIPS 2017). 2017.
+[7] Grinsztajn L, Oyallon E, Varoquaux G. Why do tree-based models still outperform deep learning on typical tabular data?[C]//Advances in Neural Information Processing Systems 35. 2022: 507-520.
 
-[8]★ Brody S, Alon U, Yahav E. How attentive are graph attention networks?[C]//International Conference on Learning Representations (ICLR 2022). 2022.
+[8] Weber M, Chen J, Suzumura T, et al. Scalable graph learning for anti-money laundering: A first look[C]//NeurIPS 2018 Workshop on Challenges and Opportunities for AI in Financial Services. arXiv:1812.00076, 2018.
 
-[9]★ Weber M, Domeniconi G, Chen J, et al. Anti-money laundering in bitcoin: Experimenting with graph convolutional networks for financial forensics[C]//KDD Workshop on Anomaly Detection in Finance. 2019.
+[9] Weber M, Domeniconi G, Chen J, et al. Anti-money laundering in bitcoin: Experimenting with graph convolutional networks for financial forensics[C]//KDD Workshop on Anomaly Detection in Finance. 2019.
 
-[10]★ Weber M, Chen J, Suzumura T, et al. Scalable graph learning for anti-money laundering: A first look[C]//NeurIPS 2018 Workshop on Challenges and Opportunities for AI in Financial Services. arXiv:1812.00076, 2018.（AMLSim 模拟器原始出处）
+[10] Alarab I, Prakoonwit S, Nacer M I. Graph-based LSTM for anti-money laundering: Experimenting temporal graph convolutional networks with financial transactions[J]. Neural Processing Letters, 2022, 55: 6831-6846. DOI: 10.1007/s11063-022-10904-8.
 
-[11]★ Multerer L, Inchingolo M, Kletz D, et al. Counterfactual methods for detecting unfairness in anti-money laundering algorithms[J]. arXiv:2607.05101, 2026.（IBM AMLSim 数据集使用与反事实分析先例）
+[11] Bakhshinejad N, et al. A graph-based deep learning model for the anti-money laundering task of transaction monitoring[C]//Proceedings of the 16th International Joint Conference on Computational Intelligence. 2024. DOI: 10.5220/0013071700003837.
 
-[12]★ Losavio L, Sovrano F, Fenoglio D, et al. SALT-GNN: Handling dense neighborhoods in anti-money laundering graphs via statistics-aware attention[J]. arXiv:2607.10131, 2026.（同数据集 HI-Small 的 GNN 最新工作）
+[12] Ferretti S, et al. Enhancing anti-money laundering frameworks: An application of graph neural networks in cryptocurrency[J]. IEEE Access, 2025. DOI: 10.1109/ACCESS.2025.3552240.
 
-[13] IBM Tabular Data on AML. IBM AMLSim transaction dataset (HI-Small)[EB/OL]. https://www.kaggle.com/datasets/constellation-ptt/ibm-tabular-data-on-aml, 访问日期: TODO.
+[13] Losavio L, Sovrano F, Fenoglio D, et al. SALT-GNN: Handling dense neighborhoods in anti-money laundering graphs via statistics-aware attention[J]. arXiv:2607.10131, 2026.
 
-[14] FATF. Opportunities and challenges of new technologies for AML/CFT[R]. Paris: Financial Action Task Force, 2021.（报告编号 TODO）
+[14] Ribeiro M T, Singh S, Guestrin C. "Why should I trust you?": Explaining the predictions of any classifier[C]//Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. 2016: 1135-1144.
 
-[15] TODO: 中文核心 AML/金融风控机器学习综述 1 篇——知网检索"反洗钱 机器学习"或"金融欺诈 图神经网络"，优先《计算机应用》《计算机工程与应用》近 3 年，兼顾中文引用规范.
+[15] Lundberg S M, Lee S I. A unified approach to interpreting model predictions[C]//Advances in Neural Information Processing Systems 30. 2017: 4765-4774.
 
-[16] TODO: 极不平衡学习（代价敏感/尺度加权）方法 1 篇.
+[16] Rudin C. Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead[J]. Nature Machine Intelligence, 2019, 1(5): 206-215.
+
+[17] Wachter S, Mittelstadt B, Russell C. Counterfactual explanations without opening the black box: Automated decisions and the GDPR[J]. Harvard Journal of Law & Technology, 2018, 31(2): 841-887.
+
+[18] Multerer L, Inchingolo M, Kletz D, et al. Counterfactual methods for detecting unfairness in anti-money laundering algorithms[J]. arXiv:2607.05101, 2026.
+
+[19] Hamilton W, Ying Z, Leskovec J. Inductive representation learning on large graphs[C]//Advances in Neural Information Processing Systems 30. 2017: 1024-1034.
+
+[20] Brody S, Alon U, Yahav E. How attentive are graph attention networks?[C]//International Conference on Learning Representations (ICLR). 2022.
+
+[21] Davis J, Goadrich M. The relationship between precision-recall and ROC curves[C]//Proceedings of the 23rd International Conference on Machine Learning. 2006: 233-240.
+
+[22] IBM. IBM tabular data on anti-money laundering (HI-Small)[EB/OL]. https://www.kaggle.com/datasets/constellation-ptt/ibm-tabular-data-on-aml.
+
+[待补1]（中文核心·综述位）知网检索建议：主题="反洗钱"AND"机器学习"，限定《计算机应用》《计算机工程与应用》《计算机科学与探索》等中文核心，近 5 年，优先被引 50+ 的综述或检测方法论文 2-3 篇。
+
+[待补2]（中文核心·GNN 金融位）知网检索建议：主题="反洗钱"AND（"图神经网络" OR "图表学习"），同上期刊范围，方法类 1-2 篇。
+
+[待补3]（中文核心·可解释位）知网检索建议：主题="可解释"AND（"金融风控" OR "反欺诈" OR "信用风险"），近 5 年 1-2 篇。
 
 ---
 
