@@ -1,0 +1,17 @@
+{
+  "run_id": "2026-09-21T02:03:50.719477+00:00",
+  "model": "xgboost-regularized-78col",
+  "matrix": {
+    "temporal": {
+      "clean": 0.6276399549241122,
+      "leaked_labels": 0.9339953004784634,
+      "leak_gain": 0.3063553455543512
+    },
+    "random": {
+      "clean": 0.5873333567219229,
+      "leaked_labels": 0.9588203107221241,
+      "leak_gain": 0.37148695400020126
+    }
+  },
+  "notes": "leaked_labels = test features+labels appended to training, replicating the original THG-OAFN unmasked full-graph cross-entropy (thg_oafn.py:152, train_mask accepted but unused); random split replicates literature-common non-temporal evaluation."
+}
