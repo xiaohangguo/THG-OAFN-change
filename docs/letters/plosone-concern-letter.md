@@ -2,10 +2,10 @@
 
 > 用途说明：正式投诉信。英文版为发送主件，中文版供你逐句核对内容。发送前完成三个占位符（署名、单位、联系方式）。
 >
-> 发送渠道（按优先级）：
-> 1. PLOS 官方联系表单/邮箱，从 https://www.plos.org/contact/ 现查（避免用过期邮箱）
-> 2. 主题行务必含 DOI，分拣快
-> 3. 同时在 PLOS One 论文页提交 Reader Comment（公开记录，双轨）
+> 发送渠道（PLOS 官方政策页明文规定，https://journals.plos.org/plosone/s/corrections-expressions-of-concern-and-retractions）：
+> 1. **主送：pub-ethics@plos.org**（PLOS Publication Ethics team），**抄送：plosone@plos.org**（期刊办公室）——官方对"已发表论文完整性/有效性关注"的指定通道
+> 2. 主题行务必含 DOI
+> 3. 辅助公开记录：论文页 Comments 标签发技术性评论（单独克制版措辞见 reader-comment-draft.md；PLOS 政策明文：评论区不得暗示 misconduct，完整性关注必须走邮件——双轨内容强度有意不同）
 >
 > 建议实名并署导师（PLOS 对匿名举报处理权重低；你们的泄漏法医分析已进学位论文第 4.6 节，是时间戳证据）。
 
