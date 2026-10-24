@@ -5,7 +5,7 @@
 > 发送渠道（PLOS 官方政策页明文规定，https://journals.plos.org/plosone/s/corrections-expressions-of-concern-and-retractions）：
 > 1. **主送：pub-ethics@plos.org**（PLOS Publication Ethics team），**抄送：plosone@plos.org**（期刊办公室）——官方对"已发表论文完整性/有效性关注"的指定通道
 > 2. 主题行务必含 DOI
-> 3. 辅助公开记录：论文页 Comments 标签发技术性评论（单独克制版措辞见 reader-comment-draft.md；PLOS 政策明文：评论区不得暗示 misconduct，完整性关注必须走邮件——双轨内容强度有意不同）
+> 3. 公开记录由 GitHub issue #1 承担（邮件中已引用），无需论文页评论；若未来想要公开技术讨论，reader-comment-draft.md 备有合规措辞（PLOS 政策：评论区不得暗示 misconduct）
 >
 > 建议实名并署导师（PLOS 对匿名举报处理权重低；你们的泄漏法医分析已进学位论文第 4.6 节，是时间戳证据）。
 
@@ -83,7 +83,8 @@ Wei S., Lee S. (2025). Internet fraud transaction detection based on temporal-aw
 - [ ] 论文页与 DOI 再核对一遍（PLOS 站内检索 e0337208）
 - [ ] 三个占位符（姓名/单位/邮箱，ORCID 可选）填完
 - [ ] 决定是否署导师（建议署，增加处理权重）
-- [ ] 附件 1：`scripts/leakage_forensics.py` + `experiments/results/leakage_forensics.json` 打包
-- [ ] 附件 2：GitHub issue #1 存档（截图或 PDF 打印）
+- [ ] 附件：`THG-OAFN-plosone-evidence.zip`（已含 leakage_forensics 脚本+JSON、issue 存档、行号验证的代码证据）
+- [ ] GitHub issue #1 的行号更正评论已发布（issue-correction-comment.md 的内容）
+- [ ] 确认仓库 `docs/letters/evidence/.../code-evidence.md` 链接可公开访问
 - [ ] 中文版仅供你自己核对，勿发送（PLOS 用英文受理）
-- [ ] 信中所有行号在发送前对最新版仓库再验一次（作者若已 push 修复，行号会漂移——若已修复，信的诉求改为"对已发表结果的更正"）
+- [ ] 发送：主送 pub-ethics@plos.org，抄送 plosone@plos.org，主题含 DOI；论文页评论可选项、默认跳过
